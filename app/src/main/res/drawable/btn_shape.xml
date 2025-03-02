@@ -1,0 +1,17 @@
+<!-- res/drawable/btn_selector.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние: кнопка нажата -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/button_press_color"/> <!-- Цвет при нажатии -->
+            <corners android:radius="8dp"/> <!-- Закругление углов (опционально) -->
+        </shape>
+    </item>
+    <!-- Состояние: кнопка не нажата (по умолчанию) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/button_color"/> <!-- Цвет по умолчанию -->
+            <corners android:radius="8dp"/> <!-- Закругление углов (опционально) -->
+        </shape>
+    </item>
+</selector>

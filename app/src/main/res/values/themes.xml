@@ -1,0 +1,35 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ProTim" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/active_field</item>
+        <item name="colorPrimaryVariant">@color/inactive_field</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    <style name="TitleLarge">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="HintText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/inactive_field</item>
+        <item name="android:textStyle"></item>
+    </style>
+
+    <style name="LinkText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/button_color</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="FilledBoxEndIconTint" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="endIconTint">@color/active_field</item>
+        <item name="android:radius">8dp</item>
+    </style>
+    <style name="Theme.ProTim" parent="Base.Theme.ProTim" />
+</resources>

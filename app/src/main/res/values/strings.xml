@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ProTim</string>
+    <string name="buttonLogIn">Войти</string>
+    <string name="buttonChangePassword"><u>Изменить пароль</u></string>
+    <string name="buttonSignIn"><u>Зарегистрироваться</u></string>
+    <string name="Login">Логин</string>
+    <string name="Password">Пароль</string>
+    <string name="LogIn">Вход</string>
+    <string name="go_back">GO BACK</string>
+</resources>
