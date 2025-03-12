@@ -13,7 +13,17 @@
         android:theme="@style/Theme.ProTim"
         tools:targetApi="31">
         <activity
+            android:name=".GoodPasswordChangePage"
+            android:exported="false" />
+        <activity
+            android:name=".PasswordChangePage"
+            android:exported="false" />
+        <activity
             android:name=".RegisterPage"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginPage"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

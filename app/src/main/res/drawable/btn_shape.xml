@@ -1,6 +1,7 @@
 <!-- res/drawable/btn_selector.xml -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Состояние: кнопка нажата -->
+
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/button_press_color"/> <!-- Цвет при нажатии -->

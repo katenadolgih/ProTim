@@ -7,4 +7,23 @@
     <string name="Password">Пароль</string>
     <string name="LogIn">Вход</string>
     <string name="go_back">GO BACK</string>
+    <string name="Registration">Регистрация</string>
+    <string name="Surname">Фамилия</string>
+    <string name="Name">Имя</string>
+    <string name="PhoneNumber">Телефон</string>
+    <string name="Email">Электронная почта</string>
+    <string name="buttonRegister">Зарегистрироваться</string>
+    <string name="terms_and_conditions">
+    Нажимая кнопку «Зарегистрироваться», Вы соглашаетесь с
+    <a href="https://протим.рф/oferta.pdf"><u>Публичной офертой</u></a> и
+    <a href="https://протим.рф/policy.pdf"><u>Политикой обработки персональных данных</u></a>
+</string>
+    <string name="buttonLogInUnderlined"><u>Войти</u></string>
+    <string name="PasswordChange">Изменение пароля</string>
+    <string name="buttonCancel">Отменить</string>
+    <string name="buttonSend">Отправить</string>
+    <string name="image_description">лого Протим</string>
+    <string name="text_change_password">На указанную почту Вам будет отправлено письмо с инструкцией для изменения пароля.</string>
+    <string name="Okay">Ок</string>
+    <string name="letter_is_sent_to">Письмо отправлено на Ekaterina@mail.ru</string>
 </resources>
