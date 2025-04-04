@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/main"
-    tools:context=".MainActivity">
+    tools:context=".pages.MainActivity">
 
     <!-- Authorization Block -->
     <LinearLayout
@@ -33,7 +33,7 @@
 
         <!-- Кнопка -->
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/registrationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/buttonRegister"
@@ -43,7 +43,7 @@
             android:layout_gravity="center_horizontal"/>
 
         <Button
-            android:id="@+id/cancelButton"
+            android:id="@+id/loginButton"
             style="@style/ButtonTextStyleBlue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

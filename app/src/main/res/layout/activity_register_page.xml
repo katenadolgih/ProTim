@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/register_page"
-    tools:context=".RegisterPage">
+    tools:context=".pages.RegisterPage">
 
     <!-- TopAppBar -->
     <androidx.appcompat.widget.Toolbar
@@ -126,7 +126,7 @@
 
         <!-- Кнопка -->
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/registrationButton"
             style="@style/ButtonTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

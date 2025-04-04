@@ -1,4 +1,4 @@
-package org.hse.protim;
+package org.hse.protim.pages;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
