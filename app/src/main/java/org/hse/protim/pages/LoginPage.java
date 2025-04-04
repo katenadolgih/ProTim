@@ -38,7 +38,7 @@ public class LoginPage extends BaseActivity {
         textInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
         textInputLayoutPassword.setErrorIconDrawable(null);
 
-        loginButton = findViewById(R.id.registrationButton);
+        loginButton = findViewById(R.id.loginButton);
         changePasswordLink = findViewById(R.id.changePasswordLink);
         registerLink = findViewById(R.id.registerLink);
 

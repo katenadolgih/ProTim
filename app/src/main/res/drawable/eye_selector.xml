@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Состояние, когда пароль виден -->
-    <item android:state_checked="true" android:drawable="@drawable/iconamoon_eye_thin" />
+    <item android:state_checked="true" android:drawable="@drawable/eye_off" />
     <!-- Состояние, когда пароль скрыт -->
     <item android:state_checked="false" android:drawable="@drawable/iconamoon_eye_thin" />
 </selector>

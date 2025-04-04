@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:id="@+id/login"
-    tools:context=".pages.LoginPage">
+    tools:context=".LoginPage">
 
     <!-- TopAppBar -->
     <androidx.appcompat.widget.Toolbar
@@ -97,7 +97,7 @@
 
             <!-- Кнопка -->
             <Button
-                android:id="@+id/registrationButton"
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/buttonLogIn"
@@ -112,7 +112,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/registrationButton">
+                app:layout_constraintTop_toBottomOf="@id/loginButton">
 
                 <TextView
                     android:id="@+id/changePasswordLink"

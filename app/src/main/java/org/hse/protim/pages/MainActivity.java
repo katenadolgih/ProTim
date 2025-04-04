@@ -13,7 +13,7 @@ import org.hse.protim.clients.RegisterClient;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
-    private Button loginButton, registrationButton;
+    private Button loginButton, cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         loginButton = findViewById(R.id.loginButton);
-        registrationButton = findViewById(R.id.registrationButton);
+        cancelButton = findViewById(R.id.cancelButton);
     }
 
     private void handle() {
-        loginButton.setOnClickListener(v -> loginButtonHandler());
-        registrationButton.setOnClickListener(v -> registrationButtonHandler());
+        loginButton.setOnClickListener(v -> registrationButtonHandler());
+        cancelButton.setOnClickListener(v -> loginButtonHandler());
     }
 
     private void loginButtonHandler() {
