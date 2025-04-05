@@ -10,7 +10,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Здесь не вызываем setContentView, так как layout устанавливается в дочерних классах
     }
-
+//новый коммит
     @Override
     public void onBackPressed() {
         super.onBackPressed();
