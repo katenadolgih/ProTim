@@ -13,35 +13,66 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProTim"
         tools:targetApi="31">
+
+        <!-- Главная активность -->
         <activity
-            android:name=".pages.PasswordChangeLogInPage"
-            android:exported="false"> <!--true -->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN"/>-->
-<!--                <action android:name="android.intent.category.LAUNCHER"/>-->
-<!--            </intent-filter>-->
-
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW"/>-->
-<!--                <category android:name="android.intent.category.DEFAULT"/>-->
-<!--                <category android:name="android.intent.category.BROWSABLE"/>-->
-<!--                <data android:scheme="http"-->
-<!--                    android:host="www.protimrf.com"/>-->
-<!--            </intent-filter>-->
-
+            android:name=".pages.HomePage"
+            android:launchMode="singleTop"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <!-- Навигационные разделы -->
         <activity
-            android:name=".pages.GoodPasswordChangePage"
+            android:name=".pages.ProfilePage"
+            android:parentActivityName="pages.HomePage"
             android:exported="false" />
         <activity
-            android:name=".pages.PasswordChangePage"
+            android:name=".pages.FavoritesPage"
+            android:parentActivityName=".pages.HomePage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.CoursesPage"
+            android:parentActivityName=".pages.HomePage"
+            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".pages.SearchPage"-->
+<!--            android:parentActivityName=".pages.HomePage"-->
+<!--            android:exported="false" />-->
+        <!-- Экран авторизации и регистрации -->
+        <activity
+            android:name=".pages.LoginPage"
             android:exported="false" />
         <activity
             android:name=".pages.RegisterPage"
             android:exported="false"
             android:screenOrientation="portrait" />
+
+        <!-- Экраны смены пароля -->
         <activity
-            android:name=".pages.LoginPage"
+            android:name=".pages.PasswordChangePage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.PasswordChangeLogInPage"
+            android:exported="false"> <!--true -->
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN"/>-->
+            <!--                <action android:name="android.intent.category.LAUNCHER"/>-->
+            <!--            </intent-filter>-->
+
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.VIEW"/>-->
+            <!--                <category android:name="android.intent.category.DEFAULT"/>-->
+            <!--                <category android:name="android.intent.category.BROWSABLE"/>-->
+            <!--                <data android:scheme="http"-->
+            <!--                    android:host="www.protimrf.com"/>-->
+            <!--            </intent-filter>-->
+
+        </activity>
+        <activity
+            android:name=".pages.GoodPasswordChangePage"
             android:exported="false" />
         <activity
             android:name=".pages.MainActivity"
