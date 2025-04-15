@@ -32,4 +32,26 @@
     <string name="Courses">Курсы</string>
     <string name="Favorites">Избранное</string>
     <string name="Profile">Профиль</string>
+    <string name="slider_image">Изображение слайдера</string>
+    <string name="Notifications">Уведомления</string>
+    <string name="Actual_courses">Актуальные курсы</string>
+    <string name="New_projects">Новые проекты</string>
+    <string name="project_image">Изображение проекта</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="like_project">Лайкнуть проект</string>
+    <string name="Popular_projects">Популярные проекты</string>
+    <string name="enrollCourse">Записаться на курс</string>
+    <string name="CourseName">Название курса</string>
+    <string name="Format">Формат</string>
+    <string name="Price">Стоимость</string>
+    <string name="Duration">Продолжительность</string>
+    <string name="Stack">Что освоите</string>
+    <string name="Who_for">Для кого</string>
+    <string name="Popular">Популярное</string>
+    <string name="clear_search">Очистить</string>
+    <string name="search_icon">Поиск</string>
+    <string name="search_hint">Название проекта</string>
+    <string name="rated_page_title">Оценили</string>
+    <string name="page_title">Название страницы</string>
+    <string name="notification_page_title">Уведомления</string>
 </resources>

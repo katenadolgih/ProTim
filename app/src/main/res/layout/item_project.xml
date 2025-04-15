@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="317dp"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Картинка проекта с кнопкой избранного -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="191dp"
+            android:maxWidth="350dp"
+            android:background="@drawable/rounded_corners_project">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/projectImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxWidth="350dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/photo_project"
+                android:contentDescription="@string/project_image"
+                app:shapeAppearanceOverlay="@style/RoundedImageStyle"/>
+
+
+            <!-- Кнопка добавления в избранное -->
+            <ImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="13dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/selector_favorite"
+                android:contentDescription="@string/add_to_favorites"/>
+        </RelativeLayout>
+
+        <!-- Описание проекта -->
+        <TextView
+            android:id="@+id/projectDescription"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Описание проекта с подробным изложением сути и целей разработки адвавдоавдаовдаодвлдв вдаодваоа ваодв"/>
+
+        <!-- Хештеги -->
+        <TextView
+            android:id="@+id/projectHashtags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/active_field"
+            android:textSize="12sp"
+            tools:text="#UI #UX #Design #Mobile"/>
+
+        <!-- Автор и лайки -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <!-- Автор (с подчеркиванием) -->
+            <TextView
+                android:id="@+id/projectAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:textColor="@color/active_field"
+                android:textSize="14sp"
+                tools:text="Иван Петров"/>
+
+            <!-- Пустое пространство -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <!-- Блок лайков -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Кнопка лайка -->
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/selector_like"
+                    android:contentDescription="@string/like_project"/>
+
+                <!-- Количество лайков -->
+                <TextView
+                    android:id="@+id/likesCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:textColor="@color/active_field"
+                    android:textSize="14sp"
+                    tools:text="256"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

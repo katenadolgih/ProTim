@@ -3,25 +3,25 @@
     <item
         android:id="@+id/nav_home"
         android:title="@string/Home"
-        android:icon="@drawable/ic_home"/>
+        android:icon="@drawable/nav_home_selector"/>
 
     <item
         android:id="@+id/nav_search"
         android:title="@string/Search"
-        android:icon="@drawable/ic_search"/>
+        android:icon="@drawable/nav_search_selector"/>
 
     <item
         android:id="@+id/nav_courses"
         android:title="@string/Courses"
-        android:icon="@drawable/ic_courses"/>
+        android:icon="@drawable/nav_courses_selector"/>
 
     <item
         android:id="@+id/nav_favorites"
         android:title="@string/Favorites"
-        android:icon="@drawable/ic_favorites"/>
+        android:icon="@drawable/nav_favorites_selector"/>
 
     <item
         android:id="@+id/nav_profile"
         android:title="@string/Profile"
-        android:icon="@drawable/ic_profile"/>
+        android:icon="@drawable/nav_profile_selector"/>
 </menu>

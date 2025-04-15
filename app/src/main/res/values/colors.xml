@@ -8,4 +8,8 @@
     <color name="button_color">#256AF4</color>
     <color name="button_press_color">#0942B3</color>
     <color name="light_black">#242424</color>
+    <color name="dot_inactive">#FAFAFA</color>
+    <color name="dot_inactive_60">#99FAFAFA</color>
+    <color name="gray_text">#242424</color>
+    <color name="gray_search_text">#B8B8B8</color>
 </resources>

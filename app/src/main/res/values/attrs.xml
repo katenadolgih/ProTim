@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="CustomDotsIndicator">
+        <attr name="selected_dot_drawable" format="reference" />
+        <attr name="unselected_dot_drawable" format="reference" />
+    </declare-styleable>
+</resources>
