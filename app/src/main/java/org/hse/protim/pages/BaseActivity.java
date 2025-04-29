@@ -65,8 +65,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (this instanceof HomePage
                 || this instanceof ActualCoursesPage
+                || this instanceof CourseDetailsPage
                 || this instanceof NewProjectsPage
-                || this instanceof PopularProjectsPage) {
+                || this instanceof PopularProjectsPage
+                || this instanceof NotificationPage) {
             highlightTab(R.id.icon_home, R.id.text_home);
         } else if (this instanceof SearchPage) {
             highlightTab(R.id.icon_search, R.id.text_search);

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/favorite_popup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_margin="8dp"
+    android:background="@drawable/search_input_background"
+    android:orientation="horizontal"
+    android:paddingVertical="14dp"
+    android:paddingHorizontal="16dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <TextView
+        android:id="@+id/save_favorite_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/light_black"
+        android:textSize="14sp"
+        android:text="@string/You_save_favorite"/>
+
+    <TextView
+        android:id="@+id/moove_text"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="@drawable/search_input_background"
+        android:paddingHorizontal="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="end"
+        android:textColor="@color/active_field"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:text="@string/Moove"/>
+
+
+    <!-- Кнопка настроек -->
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_cross_48" />
+</LinearLayout>

@@ -39,7 +39,6 @@ public class RatedPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_rated_page);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rated_page), (v, insets) -> {
