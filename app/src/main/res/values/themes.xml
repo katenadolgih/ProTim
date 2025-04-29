@@ -70,7 +70,9 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textColorHint">@color/gray_search_text</item>
     </style>
-
+    <style name="RoundedPhotoStyle" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
 
     <style name="Theme.ProTim" parent="Base.Theme.ProTim" />
 </resources>

@@ -17,7 +17,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Картинка проекта с кнопкой избранного -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="191dp"
@@ -34,8 +33,6 @@
                 android:contentDescription="@string/project_image"
                 app:shapeAppearanceOverlay="@style/RoundedImageStyle"/>
 
-
-            <!-- Кнопка добавления в избранное -->
             <ImageButton
                 android:id="@+id/favoriteButton"
                 android:layout_width="wrap_content"
@@ -61,7 +58,7 @@
             android:textSize="14sp"
             android:maxLines="2"
             android:ellipsize="end"
-            tools:text="Описание проекта с подробным изложением сути и целей разработки адвавдоавдаовдаодвлдв вдаодваоа ваодв"/>
+            tools:text="Описание проекта с подробным изложением сути и целей разработки, соответствующего стандартам вдаодваоа ваодв"/>
 
         <!-- Хештеги -->
         <TextView

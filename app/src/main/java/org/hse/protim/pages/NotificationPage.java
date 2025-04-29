@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.hse.protim.R;
 
-public class NotificationPage extends AppCompatActivity {
+public class NotificationPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
@@ -21,7 +21,6 @@ public class NotificationPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_notification_page);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.notification_page), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

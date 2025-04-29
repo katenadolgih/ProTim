@@ -12,24 +12,19 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.hse.protim.R;
 
-public class CourseDetailsPage extends AppCompatActivity {
+public class CourseDetailsPage extends BaseActivity {
 
-    // Объявляем переменные
     private ImageButton buttonBack;
+    private ImageButton enrollButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_course_details_page);
 
-        // Инициализация переменных
         init();
-
-        // Установка обработчиков
         handle();
 
-        // Установка отступов для системы
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.course_details_page), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -37,16 +32,13 @@ public class CourseDetailsPage extends AppCompatActivity {
         });
     }
 
-    // Метод для инициализации переменных
     private void init() {
-        buttonBack = findViewById(R.id.button_back); // Находим кнопку "Назад"
+        buttonBack = findViewById(R.id.button_back);
     }
 
-    // Метод для обработки нажатий
     private void handle() {
-        // Обработка клика по кнопке "Назад"
         if (buttonBack != null) {
-            buttonBack.setOnClickListener(v -> onBackPressed()); // Закрытие текущей активности
+            buttonBack.setOnClickListener(v -> onBackPressed());
         }
     }
 }

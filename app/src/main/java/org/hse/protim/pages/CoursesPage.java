@@ -14,7 +14,6 @@ public class CoursesPage extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_courses_page);
 
         // Обработка Insets для корректного отображения

@@ -54,4 +54,7 @@
     <string name="rated_page_title">Оценили</string>
     <string name="page_title">Название страницы</string>
     <string name="notification_page_title">Уведомления</string>
+    <string name="Moove">Перейти</string>
+    <string name="You_save_favorite">Вы сохранили проект
+        \n в “Избранное”</string>
 </resources>
