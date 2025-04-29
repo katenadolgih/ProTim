@@ -17,7 +17,7 @@ import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.RetrofitProvider;
 import org.hse.protim.clients.retrofit.courses.CourseClient;
 
-public class CourseDetailsPage extends AppCompatActivity {
+public class CourseDetailsPage extends BaseActivity {
 
     // Объявляем переменные
     private ImageButton buttonBack;
