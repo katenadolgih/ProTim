@@ -2,7 +2,6 @@ package org.hse.protim.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -11,8 +10,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.hse.protim.R;
-import org.hse.protim.TokenStorage;
-import org.hse.protim.clients.RegisterClient;
+import org.hse.protim.clients.retrofit.auth.RegisterClient;
 
 public class LoginPage extends BaseActivity {
 
@@ -92,26 +90,7 @@ public class LoginPage extends BaseActivity {
         registerClient.signIn(login, password, new RegistrationCallback() {
             @Override
             public void onSuccess(String email) {
-                registerClient.test(new RegistrationCallback() {
-                    @Override
-                    public void onSuccess(String testResponse) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(LoginPage.this,
-                                    "Login and test successful! Response: " + testResponse,
-                                    Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(LoginPage.this, MainActivity.class));
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(String error) {
-                        runOnUiThread(() ->
-                                Toast.makeText(LoginPage.this,
-                                        "Login OK but test failed: " + error,
-                                        Toast.LENGTH_LONG).show()
-                        );
-                    }
-                });
+                runOnUiThread(() -> startActivity(new Intent(LoginPage.this, HomePage.class)));
             }
 
             @Override

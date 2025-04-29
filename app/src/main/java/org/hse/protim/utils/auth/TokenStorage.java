@@ -1,11 +1,10 @@
-package org.hse.protim;
+package org.hse.protim.utils.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
-import androidx.security.crypto.MasterKeys;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -32,6 +31,17 @@ public class TokenStorage {
             sharedPreferences.edit()
                     .putString("access_token", accessToken)
                     .putString("refresh_token", refreshToken)
+                    .apply();
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearAccess() {
+        try {
+            SharedPreferences sharedPreferences = getEncryptedSharedPreferences();
+            sharedPreferences.edit()
+                    .remove("access_token")
                     .apply();
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();

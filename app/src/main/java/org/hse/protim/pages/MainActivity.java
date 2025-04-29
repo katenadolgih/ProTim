@@ -8,9 +8,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.hse.protim.R;
-import org.hse.protim.clients.RegisterClient;
-
-import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
     private Button loginButton, cancelButton;

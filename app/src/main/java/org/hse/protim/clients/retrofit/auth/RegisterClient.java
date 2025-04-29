@@ -1,22 +1,18 @@
-package org.hse.protim.clients;
+package org.hse.protim.clients.retrofit.auth;
 
-import static org.hse.protim.clients.ClientsConst.baseUrl;
+
+import static org.hse.protim.clients.retrofit.RetrofitProvider.BASE_URL;
 
 import android.content.Context;
-import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-import org.hse.protim.DTO.LoginDTO;
-import org.hse.protim.DTO.RegisterDTO;
-import org.hse.protim.DTO.TokensDTO;
-import org.hse.protim.TokenStorage;
-import org.hse.protim.pages.LoginPage;
-import org.hse.protim.pages.RegisterPage;
+import org.hse.protim.DTO.auth.LoginDTO;
+import org.hse.protim.DTO.auth.RegisterDTO;
+import org.hse.protim.DTO.auth.TokensDTO;
+import org.hse.protim.utils.auth.TokenStorage;
 import org.hse.protim.pages.RegistrationCallback;
 
 import java.io.IOException;
@@ -35,10 +31,10 @@ public class RegisterClient {
     public RegisterClient(Context context) {
         this.context = context;
     }
-    private static final String register = "/register";
-    private static final String signIn = "/sign-in";
+    private static final String REGISTER = "register";
+    private static final String SIGN_IN = "sign-in";
 
-    private static final String test = "/test";
+    private static final String TEST = "test";
     OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
@@ -56,7 +52,7 @@ public class RegisterClient {
         );
 
         Request request = new Request.Builder()
-                .url(baseUrl + register)
+                .url(BASE_URL + REGISTER)
                 .post(requestBody)
                 .build();
 
@@ -87,7 +83,7 @@ public class RegisterClient {
         );
 
         Request request = new Request.Builder()
-                .url(baseUrl + signIn)
+                .url(BASE_URL + SIGN_IN)
                 .post(requestBody)
                 .build();
 
@@ -117,7 +113,7 @@ public class RegisterClient {
         String accessToken = tokenStorage.getAccessToken();
 
         Request request = new Request.Builder()
-                .url(baseUrl + test)
+                .url(BASE_URL + TEST)
                 .get()
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();

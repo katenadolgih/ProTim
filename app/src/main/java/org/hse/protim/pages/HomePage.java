@@ -1,6 +1,7 @@
 package org.hse.protim.pages;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -11,18 +12,28 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
+import org.hse.protim.DTO.courses.CoursePreviewDTO;
+import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.courses.CourseClient;
+import org.hse.protim.clients.retrofit.projects.ProjectClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HomePage extends BaseActivity {
 
@@ -44,6 +55,13 @@ public class HomePage extends BaseActivity {
     private TextView seeAllPopularProjects;
 
     private ImageView notificationIcon;
+    private RetrofitProvider retrofitProvider;
+    private CourseClient courseClient;
+    private ProjectClient projectClient;
+
+    private Map<Long, List<ImageButton>> buttonLikeMap = new HashMap<>();
+    private Map<Long, List<TextView>> textViewMap = new HashMap<>();
+    private Map<Long, List<ImageButton>> favouritesMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +89,11 @@ public class HomePage extends BaseActivity {
         seeAllPopularProjects = findViewById(R.id.seeAllPopularProjects);
 
         notificationIcon = findViewById(R.id.notificationIcon);
+
+        retrofitProvider = new RetrofitProvider(this);
+        courseClient = new CourseClient(retrofitProvider);
+
+        projectClient = new ProjectClient(retrofitProvider);
     }
 
     private void handle() {
@@ -134,130 +157,298 @@ public class HomePage extends BaseActivity {
     }
 
     private void setupRecyclerView() {
-        // --- Курсы ---
-        recyclerCourses.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        List<View> courseViews = new ArrayList<>();
         LayoutInflater inflater = LayoutInflater.from(this);
+        setCourses(inflater);
+        setNewProjects(inflater);
+        setPopularProjects(inflater);
+    }
 
-        View course1 = inflater.inflate(R.layout.item_course, recyclerCourses, false);
-
-        ((TextView) course1.findViewById(R.id.courseTitle)).setText("Основы Java для Android");
-        ((TextView) course1.findViewById(R.id.courseDates)).setText("С 10 апреля");
-        ((TextView) course1.findViewById(R.id.coursePrice)).setText("Бесплатно");
-
-        View course2 = inflater.inflate(R.layout.item_course, recyclerCourses, false);
-        ((TextView) course2.findViewById(R.id.courseTitle)).setText("Проектирование интерфейсов");
-        ((TextView) course2.findViewById(R.id.courseDates)).setText("С 15 апреля");
-        ((TextView) course2.findViewById(R.id.coursePrice)).setText("1990 ₽");
-
-        courseViews.add(course1);
-        courseViews.add(course2);
-
-        // Заведение тегов вручную -------
-        FlexboxLayout tagsContainer = course1.findViewById(R.id.tags_container);
-
-        List<String> tags = new ArrayList<>();
-        tags.add("Android");
-        tags.add("UI/UX");
-        tags.add("TeamWork");
-
-        LayoutInflater tagInflater = LayoutInflater.from(this);
-        for (String tag : tags) {
-            TextView tagView = (TextView) tagInflater.inflate(R.layout.item_tag, tagsContainer, false);
-            tagView.setText(tag);
-            tagsContainer.addView(tagView);
-        }
-
-        recyclerCourses.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private void setPopularProjects(LayoutInflater inflater) {
+        projectClient.getProjects("popularity", 3, new ProjectClient.ProjectCallback() {
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(courseViews.get(viewType)) {};
+            public void onSuccess(List<ProjectDTO> projects) {
+                recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(HomePage.this, LinearLayoutManager.VERTICAL, false));
+                List<View> popularProjectViews = new ArrayList<>();
+
+                for (ProjectDTO project : projects) {
+                    View projectView = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
+
+                    ((TextView) projectView.findViewById(R.id.projectDescription)).setText(project.name());
+                    ((TextView) projectView.findViewById(R.id.projectHashtags)).setText(project.tags().stream().map(tag -> "#" + tag)
+                            .collect(Collectors.joining("  ")));
+                    ((TextView) projectView.findViewById(R.id.projectAuthor)).setText(project.fullName());
+                    ((TextView) projectView.findViewById(R.id.likesCount)).setText(project.likesCount().toString());
+
+                    ImageView imageView = projectView.findViewById(R.id.projectImage);
+                    Glide.with(HomePage.this)
+                            .load(project.photoPath())
+                            .into(imageView);
+
+                    ImageButton favoriteButton = projectView.findViewById(R.id.favoriteButton);
+                    TextView likesText = projectView.findViewById(R.id.likesCount);
+                    ImageButton likeButton = projectView.findViewById(R.id.likeButton);
+
+                    Long projectId = project.projectId();
+                    List<ImageButton> buttons = buttonLikeMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    buttons.add(likeButton);
+                    List<TextView> textViews = textViewMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    textViews.add(likesText);
+                    List<ImageButton> favouritesButtons = favouritesMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    favouritesButtons.add(favoriteButton);
+
+                    likeButtonHandler(project.projectId(), likeButton, likesText);
+                    favouritesHandler(projectId, favoriteButton);
+
+                    popularProjectViews.add(projectView);
+                }
+
+                recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        return new RecyclerView.ViewHolder(popularProjectViews.get(viewType)) {};
+                    }
+                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+                    @Override public int getItemCount() { return popularProjectViews.size(); }
+                    @Override public int getItemViewType(int position) { return position; }
+                });
             }
-            @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-            @Override public int getItemCount() { return courseViews.size(); }
-            @Override public int getItemViewType(int position) { return position; }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setNewProjects(LayoutInflater inflater) {
+        projectClient.getProjects("new", 3, new ProjectClient.ProjectCallback() {
+            @Override
+            public void onSuccess(List<ProjectDTO> projects) {
+                recyclerProjects.setLayoutManager(new LinearLayoutManager(HomePage.this));
+                List<View> projectViews = new ArrayList<>();
+
+                for (ProjectDTO project : projects) {
+                    View projectView = inflater.inflate(R.layout.item_project, recyclerProjects, false);
+
+                    ((TextView) projectView.findViewById(R.id.projectDescription)).setText(project.name());
+                    ((TextView) projectView.findViewById(R.id.projectHashtags)).setText(project.tags().stream().map(tag -> "#" + tag)
+                            .collect(Collectors.joining("  ")));
+                    ((TextView) projectView.findViewById(R.id.projectAuthor)).setText(project.fullName());
+                    ((TextView) projectView.findViewById(R.id.likesCount)).setText(project.likesCount().toString());
+
+                    ImageView imageView = projectView.findViewById(R.id.projectImage);
+                    Glide.with(HomePage.this)
+                            .load(project.photoPath())
+                            .into(imageView);
+
+                    ImageButton likeButton = projectView.findViewById(R.id.likeButton);
+                    ImageButton favoriteButton = projectView.findViewById(R.id.favoriteButton);
+                    TextView likesText = projectView.findViewById(R.id.likesCount);
+
+                    Long projectId = project.projectId();
+                    List<ImageButton> buttons = buttonLikeMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    buttons.add(likeButton);
+                    List<TextView> textViews = textViewMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    textViews.add(likesText);
+                    List<ImageButton> favouritesButtons = favouritesMap.computeIfAbsent(projectId, k -> new ArrayList<>());
+                    favouritesButtons.add(favoriteButton);
+
+                    likeButtonHandler(projectId, likeButton, likesText);
+                    favouritesHandler(projectId, favoriteButton);
+
+                    projectViews.add(projectView);
+                }
+
+                recyclerProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
+                    }
+                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+                    @Override public int getItemCount() { return projectViews.size(); }
+                    @Override public int getItemViewType(int position) { return position; }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void updateLikeButtons(Long projectId, boolean isLiked) {
+        List<ImageButton> buttons = buttonLikeMap.get(projectId);
+        if (buttons != null) {
+            for (ImageButton button : buttons) {
+                button.setSelected(isLiked);
+            }
+        }
+    }
+
+    private void updateLikeCounts(Long projectId, int count) {
+        List<TextView> textViews = textViewMap.get(projectId);
+        if (textViews != null) {
+            for (TextView textView : textViews) {
+                textView.setText(String.valueOf(count));
+            }
+        }
+    }
+    private void likeButtonHandler(Long projectId, ImageButton likeButton, TextView likesText) {
+        projectClient.checkLikeStatus(projectId, new ProjectClient.LikeCallback() {
+            @Override
+            public void onSuccess(Boolean isLike) {
+                updateLikeButtons(projectId, isLike);
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+            }
         });
 
-        // --- Новые проекты ---
-        recyclerProjects.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        List<View> projectViews = new ArrayList<>();
+        likeButton.setOnClickListener(v -> {
+            projectClient.putLike(projectId, new ProjectClient.PutLikeCallBack() {
+                @Override
+                public void onSuccess() {
+                    boolean newLikeState = !likeButton.isSelected();
 
-        View project1 = inflater.inflate(R.layout.item_project, recyclerProjects, false);
-        ((ImageView) project1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project1.findViewById(R.id.projectDescription)).setText("Описание проекта 1 ооочен очень оооооооочень боооольшооооооооооооооооооооооооооооооооооооое");
-        ((TextView) project1.findViewById(R.id.projectHashtags)).setText("#UI #Design #Mobile");
-        ((TextView) project1.findViewById(R.id.projectAuthor)).setText("Авторов Автор");
-        ((TextView) project1.findViewById(R.id.likesCount)).setText("29");
+                    updateLikeButtons(projectId, newLikeState);
+                    projectClient.getProjectLikeCount(projectId, new ProjectClient.LikeCountCallback() {
+                        @Override
+                        public void onSuccess(Integer count) {
+                            updateLikeCounts(projectId, count);
+                        }
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
 
-        View project2 = inflater.inflate(R.layout.item_project, recyclerProjects, false);
-        ((ImageView) project2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project2.findViewById(R.id.projectDescription)).setText("Описание проекта 2");
-        ((TextView) project2.findViewById(R.id.projectHashtags)).setText("#UX #Design #Mobile");
-        ((TextView) project2.findViewById(R.id.projectAuthor)).setText("Илларионов Инокентий");
-        ((TextView) project2.findViewById(R.id.likesCount)).setText("2999");
-
-        projectViews.add(project1);
-        projectViews.add(project2);
-
-        recyclerProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
-            }
-            @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-            @Override public int getItemCount() { return projectViews.size(); }
-            @Override public int getItemViewType(int position) { return position; }
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
-        // Вручную - лайки и избраное, переход на страницу Оценили -------
-        TextView likes1 = project1.findViewById(R.id.likesCount);
-        likes1.setOnClickListener(v -> {
+        likesText.setOnClickListener(v -> {
             Intent intent = new Intent(HomePage.this, RatedPage.class);
+            intent.putExtra("PROJECT_ID", projectId);
             startActivity(intent);
         });
+    }
 
-        ImageButton likeButton1 = project1.findViewById(R.id.likeButton);
-        likeButton1.setOnClickListener(v -> {
-            boolean selected = likeButton1.isSelected();
-            likeButton1.setSelected(!selected);
-        });
-
-        ImageButton favoriteButton1 = project1.findViewById(R.id.favoriteButton);
-        favoriteButton1.setOnClickListener(v -> {
-            boolean selected = favoriteButton1.isSelected();
-            favoriteButton1.setSelected(!selected);
-        });
-
-
-        // --- Популярные проекты ---
-        recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        List<View> popularProjectViews = new ArrayList<>();
-
-        View popularProject1 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
-        ((ImageView) popularProject1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) popularProject1.findViewById(R.id.projectDescription)).setText("Популярный проект 1");
-        ((TextView) popularProject1.findViewById(R.id.projectHashtags)).setText("#Trending #Mobile");
-        ((TextView) popularProject1.findViewById(R.id.projectAuthor)).setText("Илларионов Инокентий");
-        ((TextView) popularProject1.findViewById(R.id.likesCount)).setText("2999");
-
-        View popularProject2 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
-        ((ImageView) popularProject2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) popularProject2.findViewById(R.id.projectDescription)).setText("Популярный проект 2");
-        ((TextView) popularProject2.findViewById(R.id.projectHashtags)).setText("#Trending #UI");
-        ((TextView) popularProject2.findViewById(R.id.projectAuthor)).setText("Илларионов Инокентий");
-        ((TextView) popularProject2.findViewById(R.id.likesCount)).setText("2999");
-
-        popularProjectViews.add(popularProject1);
-        popularProjectViews.add(popularProject2);
-
-        recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(popularProjectViews.get(viewType)) {};
+    private void favouritesHandler(Long projectId, ImageButton favouritesButton) {
+        projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
+            @Override
+            public void onSuccess(Boolean isLike) {
+                updateFavouritesButtons(projectId, isLike);
             }
-            @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-            @Override public int getItemCount() { return popularProjectViews.size(); }
-            @Override public int getItemViewType(int position) { return position; }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+            }
         });
 
+        favouritesButton.setOnClickListener(v -> {
+            projectClient.updateFavourites(projectId, new ProjectClient.PutLikeCallBack() {
+                @Override
+                public void onSuccess() {
+                    projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
+                        @Override
+                        public void onSuccess(Boolean isLike) {
+                            updateFavouritesButtons(projectId, isLike);
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+    }
+
+    private void updateFavouritesButtons(Long projectId, boolean isLiked) {
+        List<ImageButton> favourites = favouritesMap.get(projectId);
+        if (favourites != null) {
+            for (ImageButton button : favourites) {
+                button.setSelected(isLiked);
+            }
+        }
+    }
+
+    private void setCourses(LayoutInflater inflater) {
+        recyclerCourses.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LayoutInflater tagInflater = LayoutInflater.from(this);
+
+        courseClient.getMainCourses(new CourseClient.CourseCallback() {
+            @Override
+            public void onSuccess(List<CoursePreviewDTO> courses) {
+                runOnUiThread(() -> {
+                    List<View> courseViews = new ArrayList<>();
+
+                    for (CoursePreviewDTO course : courses) {
+                        View courseView = inflater.inflate(R.layout.item_course, recyclerCourses, false);
+
+                        ((TextView) courseView.findViewById(R.id.courseTitle)).setText(course.name());
+
+                        String dateText = String.format("%s • %s • %s",
+                                course.startDate(), course.hours(), course.duration());
+                        ((TextView) courseView.findViewById(R.id.courseDates)).setText(dateText);
+                        ((TextView) courseView.findViewById(R.id.coursePrice)).setText(course.price());
+
+                        FlexboxLayout tagsContainer = courseView.findViewById(R.id.tags_container);
+                        for (String tag : course.tags()) {
+                            TextView tagView = (TextView) tagInflater.inflate(R.layout.item_tag, tagsContainer, false);
+                            tagView.setText(tag);
+                            tagsContainer.addView(tagView);
+                        }
+
+                        courseView.setOnClickListener(v -> {
+                            Intent intent = new Intent(HomePage.this, CourseDetailsPage.class);
+                            intent.putExtra("COURSE_ID", course.id());
+                            startActivity(intent);
+                        });
+                        courseViews.add(courseView);
+                    }
+
+                    recyclerCourses.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                        @Override
+                        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            return new RecyclerView.ViewHolder(courseViews.get(viewType)) {};
+                        }
+
+                        @Override
+                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+
+                        @Override
+                        public int getItemCount() {
+                            return courseViews.size();
+                        }
+
+                        @Override
+                        public int getItemViewType(int position) {
+                            return position;
+                        }
+                    });
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() ->
+                        Toast.makeText(HomePage.this, "Ошибка загрузки курсов: " + message, Toast.LENGTH_LONG).show()
+                );
+            }
+        });
     }
 
     @Override

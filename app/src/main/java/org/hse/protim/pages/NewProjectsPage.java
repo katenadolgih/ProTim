@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,17 +19,27 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.projects.ProjectClient;
+import org.hse.protim.utils.ProjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NewProjectsPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
     private ImageButton settingsButton;
-
+    private ProjectClient projectClient;
+    private RetrofitProvider retrofitProvider;
+    private RecyclerView recyclerNewProjects;
+    private ProjectUtils projectUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,70 +59,30 @@ public class NewProjectsPage extends BaseActivity {
             return insets;
         });
 
-
-        RecyclerView recyclerNewProjects = findViewById(R.id.newProjectsRecycler);
         recyclerNewProjects.setLayoutManager(new LinearLayoutManager(this));
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        List<View> projectViews = new ArrayList<>();
-
-        View project1 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project1.findViewById(R.id.projectDescription)).setText("Популярный проект A — исследование ИИ");
-        ((TextView) project1.findViewById(R.id.projectHashtags)).setText("#AI #Research #Tech");
-        ((TextView) project1.findViewById(R.id.projectAuthor)).setText("Смирнов Алексей");
-        ((TextView) project1.findViewById(R.id.likesCount)).setText("105");
-
-        View project2 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project2.findViewById(R.id.projectDescription)).setText("Популярный проект B — мобильное приложение для экологии");
-        ((TextView) project2.findViewById(R.id.projectHashtags)).setText("#Eco #Mobile #UX");
-        ((TextView) project2.findViewById(R.id.projectAuthor)).setText("Кузнецова Ирина");
-        ((TextView) project2.findViewById(R.id.likesCount)).setText("321");
-
-        View project3 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project3.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project3.findViewById(R.id.projectDescription)).setText("Популярный проект C — цифровая платформа образования");
-        ((TextView) project3.findViewById(R.id.projectHashtags)).setText("#EdTech #Platform #Java");
-        ((TextView) project3.findViewById(R.id.projectAuthor)).setText("Иванова Мария");
-        ((TextView) project3.findViewById(R.id.likesCount)).setText("678");
-
-        projectViews.add(project1);
-        projectViews.add(project2);
-        projectViews.add(project3);
-
-        recyclerNewProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-
-            @Override
-            public int getItemCount() {
-                return projectViews.size();
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return position;
-            }
-        });
-
+        projectUtils.setNewProjects(inflater, NewProjectsPage.this, "new", projectClient, recyclerNewProjects);
     }
 
     private void init() {
         buttonBack = findViewById(R.id.button_back);
         titleView = findViewById(R.id.title_text);
         settingsButton = findViewById(R.id.settings_button);
-
+        retrofitProvider = new RetrofitProvider(NewProjectsPage.this);
+        projectClient = new ProjectClient(retrofitProvider);
+        recyclerNewProjects = findViewById(R.id.newProjectsRecycler);
+        projectUtils = new ProjectUtils();
     }
 
     private void handle() {
         if (buttonBack != null) {
-            buttonBack.setOnClickListener(v -> onBackPressed());
+            buttonBack.setOnClickListener(v -> {
+                Intent intent = new Intent(NewProjectsPage.this, HomePage.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            });
         }
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(NewProjectsPage.this, FiltersPage.class);

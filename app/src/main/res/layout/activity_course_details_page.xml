@@ -57,7 +57,7 @@
                 android:text="@string/Format"/>
 
             <TextView
-                android:id="@+id/block1Description"
+                android:id="@+id/courseDetailsFormat"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -83,7 +83,7 @@
                 android:text="@string/Price"/>
 
             <TextView
-                android:id="@+id/block2Description"
+                android:id="@+id/courseDetailsPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -109,7 +109,7 @@
                 android:text="@string/Duration"/>
 
             <TextView
-                android:id="@+id/block3Description"
+                android:id="@+id/courseDetailsDuration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -135,7 +135,7 @@
                 android:text="@string/Who_for"/>
 
             <TextView
-                android:id="@+id/block4Description"
+                android:id="@+id/courseDetailsWhoWhom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -161,7 +161,7 @@
                 android:text="@string/Stack"/>
 
             <TextView
-                android:id="@+id/block5Description"
+                android:id="@+id/courseDetailsWhatMaster"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

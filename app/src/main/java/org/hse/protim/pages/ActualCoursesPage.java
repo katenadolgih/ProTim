@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.hse.protim.DTO.courses.CoursePreviewDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.courses.CourseClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +30,8 @@ public class ActualCoursesPage extends BaseActivity {
     private ImageButton buttonBack;
     private RecyclerView recyclerCurrentCourses;
     private TextView titleView;
+    private CourseClient courseClient;
+    private RetrofitProvider retrofitProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,36 +44,27 @@ public class ActualCoursesPage extends BaseActivity {
         recyclerCurrentCourses.setLayoutManager(new LinearLayoutManager(this));
         titleView.setText(R.string.Actual_courses);
 
-        // Создаем список курсов
-        List<Course> courses = new ArrayList<>();
-        courses.add(new Course(
-                "Базовый курс повышения квалификации «Технологии информационного моделирования. Renga: архитектура, конструктив и инженерные сети трам пам пам»",
-                Arrays.asList("AI", "Машинное обучение", "Python", "Машинное обучение","Машинное обучение", "Python"),
-                "Старт каждый пн с 31 марта 2025・24 часа・3 недели Старт каждый пн с 31 марта 2025・24 часа・3 недели Старт каждый пн с 31 марта 2025・24 часа・3 недели",
-                "От 3 000 ₽"
-        ));
-        courses.add(new Course(
-                "Курс по мобильной разработке",
-                Arrays.asList("Android", "Kotlin"),
-                "Старт 15 апреля – 15 мая",
-                "От 2 900 ₽"
-        ));
-        courses.add(new Course(
-                "Курс по мобильной разработке",
-                Arrays.asList("Android", "Kotlin", "Kotlin"),
-                "Старт 15 апреля – 15 мая",
-                "От 2 900 ₽"
-        ));
-
-        // Устанавливаем адаптер
-        CourseAdapter adapter = new CourseAdapter(courses);
-        recyclerCurrentCourses.setAdapter(adapter);
+        courseClient.getAllCourses(new CourseClient.CourseCallback() {
+            @Override
+            public void onSuccess(List<CoursePreviewDTO> courses) {
+                runOnUiThread(() -> {
+                    CourseAdapter adapter = new CourseAdapter(courses);
+                    recyclerCurrentCourses.setAdapter(adapter);
+                });
+            }
+            @Override
+            public void onError(String message) {
+                Toast.makeText(ActualCoursesPage.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void init() {
         buttonBack = findViewById(R.id.button_back);
         recyclerCurrentCourses = findViewById(R.id.actualCoursesRecycler);
         titleView = findViewById(R.id.title_text);
+        retrofitProvider = new RetrofitProvider(this);
+        courseClient = new CourseClient(retrofitProvider);
     }
 
     private void handle() {
@@ -78,9 +75,9 @@ public class ActualCoursesPage extends BaseActivity {
 
     private static class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
-        private final List<Course> courses;
+        private final List<CoursePreviewDTO> courses;
 
-        public CourseAdapter(List<Course> courses) {
+        public CourseAdapter(List<CoursePreviewDTO> courses) {
             this.courses = courses;
         }
 
@@ -94,11 +91,12 @@ public class ActualCoursesPage extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-            Course course = courses.get(position);
+            CoursePreviewDTO course = courses.get(position);
             holder.bind(course);
 
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(holder.itemView.getContext(), CourseDetailsPage.class);
+                intent.putExtra("COURSE_ID", course.id());
                 holder.itemView.getContext().startActivity(intent);
             });
         }
@@ -122,12 +120,12 @@ public class ActualCoursesPage extends BaseActivity {
                 coursePrice = itemView.findViewById(R.id.coursePrice);
             }
 
-            public void bind(Course course) {
+            public void bind(CoursePreviewDTO course) {
                 // Очищаем предыдущие теги
                 tagsContainer.removeAllViews();
 
                 // Добавляем новые теги
-                for (String tag : course.getTags()) {
+                for (String tag : course.tags()) {
                     TextView tagView = new TextView(itemView.getContext());
                     tagView.setText(tag);
                     tagView.setTextSize(10);
@@ -145,30 +143,14 @@ public class ActualCoursesPage extends BaseActivity {
                     tagsContainer.addView(tagView);
                 }
 
-                // Устанавливаем остальные данные
-                courseTitle.setText(course.getTitle());
-                courseDates.setText(course.getDates());
-                coursePrice.setText(course.getPrice());
+                String dateText = String.format("%s • %s • %s", course.startDate(),
+                        course.hours(), course.duration());
+
+                courseTitle.setText(course.name());
+                courseDates.setText(dateText);
+                coursePrice.setText(course.price());
             }
         }
     }
 
-    private static class Course {
-        private final String title;
-        private final List<String> tags;
-        private final String dates;
-        private final String price;
-
-        public Course(String title, List<String> tags, String dates, String price) {
-            this.title = title;
-            this.tags = tags;
-            this.dates = dates;
-            this.price = price;
-        }
-
-        public String getTitle() { return title; }
-        public List<String> getTags() { return tags; }
-        public String getDates() { return dates; }
-        public String getPrice() { return price; }
-    }
 }

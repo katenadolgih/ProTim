@@ -3,6 +3,8 @@ package org.hse.protim.pages;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +12,21 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.hse.protim.DTO.courses.CourseDetail;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.courses.CourseClient;
 
 public class CourseDetailsPage extends AppCompatActivity {
 
     // Объявляем переменные
     private ImageButton buttonBack;
+    private CourseClient courseClient;
+    private RetrofitProvider retrofitProvider;
+    private Long courseId;
+    private TextView courseTitle, courseDetailsFormat, courseDetailsPrice,
+            courseDetailsDuration, courseDetailsWhoWhom, courseDetailsWhatMaster;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,30 +34,53 @@ public class CourseDetailsPage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_course_details_page);
 
-        // Инициализация переменных
         init();
-
-        // Установка обработчиков
         handle();
 
-        // Установка отступов для системы
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.course_details_page), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        setData();
     }
 
-    // Метод для инициализации переменных
     private void init() {
-        buttonBack = findViewById(R.id.button_back); // Находим кнопку "Назад"
+        buttonBack = findViewById(R.id.button_back);
+        retrofitProvider = new RetrofitProvider(this);
+        courseClient = new CourseClient(retrofitProvider);
+        courseId = getIntent().getLongExtra("COURSE_ID", -1);
+        courseTitle = findViewById(R.id.courseTitle);
+        courseDetailsFormat = findViewById(R.id.courseDetailsFormat);
+        courseDetailsPrice = findViewById(R.id.courseDetailsPrice);
+        courseDetailsDuration = findViewById(R.id.courseDetailsDuration);
+        courseDetailsWhoWhom = findViewById(R.id.courseDetailsWhoWhom);
+        courseDetailsWhatMaster = findViewById(R.id.courseDetailsWhatMaster);
     }
 
-    // Метод для обработки нажатий
     private void handle() {
-        // Обработка клика по кнопке "Назад"
         if (buttonBack != null) {
-            buttonBack.setOnClickListener(v -> onBackPressed()); // Закрытие текущей активности
+            buttonBack.setOnClickListener(v -> onBackPressed());
         }
+    }
+
+    private void setData() {
+        courseClient.getCourseDetail(courseId, new CourseClient.CourseDetailCallback() {
+            @Override
+            public void onSuccess(CourseDetail courseDetail) {
+                courseTitle.setText(courseDetail.name());
+                courseDetailsFormat.setText(courseDetail.format());
+                courseDetailsPrice.setText(courseDetail.price());
+                courseDetailsDuration.setText(courseDetail.duration());
+                courseDetailsWhoWhom.setText(courseDetail.whoWhom());
+                courseDetailsWhatMaster.setText(courseDetail.whatMaster());
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(CourseDetailsPage.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
