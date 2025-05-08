@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -28,12 +31,16 @@ public class SearchPage extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private FlexboxLayout selectedFiltersContainer;
+    private ImageButton settingsButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_page);
 
+        settingsButton = findViewById(R.id.settings_button);
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new ViewPagerAdapter());
@@ -45,6 +52,36 @@ public class SearchPage extends BaseActivity {
                 case 2: tab.setText("Компании"); break;
             }
         }).attach();
+
+        selectedFiltersContainer = findViewById(R.id.selected_filters_container);
+        ArrayList<String> selectedSections = getIntent().getStringArrayListExtra("selected_sections");
+        ArrayList<String> selectedSoftware = getIntent().getStringArrayListExtra("selected_software");
+
+        if (selectedSections != null) {
+            addFilterTags(selectedSections);
+        }
+        if (selectedSoftware != null) {
+            addFilterTags(selectedSoftware);
+        }
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(SearchPage.this, FiltersPage.class);
+            startActivity(intent);
+        });
+    }
+
+    private void addFilterTags(ArrayList<String> filters) {
+        for (String filter : filters) {
+            View view = LayoutInflater.from(this).inflate(R.layout.item_filter_tag, selectedFiltersContainer, false);
+            TextView text = view.findViewById(R.id.tag_text);
+            ImageView close = view.findViewById(R.id.tag_close);
+
+            text.setText(filter);
+            view.setSelected(true);
+            text.setTextColor(ContextCompat.getColor(this, R.color.white));
+            view.setBackground(ContextCompat.getDrawable(this, R.drawable.tag_selector));
+
+            selectedFiltersContainer.addView(view);
+        }
     }
 
     // 🔹 ViewPager Adapter
@@ -237,8 +274,11 @@ public class SearchPage extends BaseActivity {
             });
 
             holder.itemView.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "Открытие проекта...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), ProjectDetailsPage.class);
+                intent.putExtra("project_name", p.description);
+                v.getContext().startActivity(intent);
             });
+
         }
 
         @Override
@@ -342,7 +382,7 @@ public class SearchPage extends BaseActivity {
 
     private List<Company> getCompanyList() {
         List<Company> list = new ArrayList<>();
-        list.add(new Company("Кайрос Инжиниринг", "Ищем специалистов", "Пермь", R.drawable.logo_protim_48x48));
+        list.add(new Company("Кайрос Инжиниринг", "Ищем специалистов", "Пермь", R.drawable.ic_user));
         list.add(new Company("Тинькофф", "Активно растем", "Москва", R.drawable.logo_protim_48x48));
         list.add(new Company("Яндекс", "Удаленная работа", "Санкт-Петербург", R.drawable.logo_protim_48x48));
         return list;

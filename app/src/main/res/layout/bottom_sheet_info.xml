@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top_background"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Разделы и марки -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Разделы и марки"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginBottom="4dp"/>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/section_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"/>
+
+
+        <!-- Владею ПО -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Владение ПО"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/section_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"/>
+
+
+        <!-- Резюме -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Резюме"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/resume_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resume_Serge.pdf"
+            android:textColor="@color/active_field"
+            android:drawableStart="@drawable/ic_pdf"
+            android:drawablePadding="8dp"
+            android:paddingTop="4dp"/>
+
+        <!-- Образование -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Образование"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/education"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Пермский Политехнический Колледж имени..."
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="14sp"
+            android:paddingTop="4dp"/>
+
+        <!-- Дипломная работа -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Дипломная работа"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/diploma_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Diploma.zip"
+            android:textColor="@color/active_field"
+            android:drawableStart="@drawable/ic_pdf"
+            android:drawablePadding="8dp"
+            android:paddingTop="4dp"/>
+
+        <!-- Социальные сети -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Мои социальные сети"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/vk_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="https://vk/sergeyakk.ru"
+            android:textColor="@color/active_field"
+            android:autoLink="web"
+            android:paddingTop="4dp"/>
+
+        <!-- Telegram -->
+        <TextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Telegram"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/telegram_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="https://t.me/ivan123"
+            android:textColor="@color/active_field"
+            android:autoLink="web"
+            android:paddingTop="4dp"/>
+
+        <!-- О себе -->
+        <TextView
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="О себе"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/about_me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Информация этого блока поможет работодателю принять правильное решение..."
+            android:textSize="14sp"
+            android:paddingTop="4dp"/>
+    </LinearLayout>
+</ScrollView>

@@ -123,10 +123,8 @@ public class ActualCoursesPage extends BaseActivity {
             }
 
             public void bind(Course course) {
-                // Очищаем предыдущие теги
                 tagsContainer.removeAllViews();
 
-                // Добавляем новые теги
                 for (String tag : course.getTags()) {
                     TextView tagView = new TextView(itemView.getContext());
                     tagView.setText(tag);
@@ -145,7 +143,6 @@ public class ActualCoursesPage extends BaseActivity {
                     tagsContainer.addView(tagView);
                 }
 
-                // Устанавливаем остальные данные
                 courseTitle.setText(course.getTitle());
                 courseDates.setText(course.getDates());
                 coursePrice.setText(course.getPrice());
