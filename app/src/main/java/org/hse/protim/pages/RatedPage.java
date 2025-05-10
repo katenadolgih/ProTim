@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import org.hse.protim.R;
 
-public class RatedPage extends AppCompatActivity {
+public class RatedPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
