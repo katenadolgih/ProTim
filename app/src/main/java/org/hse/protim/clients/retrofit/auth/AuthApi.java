@@ -1,6 +1,8 @@
 package org.hse.protim.clients.retrofit.auth;
 
+import org.hse.protim.DTO.auth.MailDTO;
 import org.hse.protim.DTO.auth.RefreshRequest;
+import org.hse.protim.DTO.auth.ResetPasswordDTO;
 import org.hse.protim.DTO.auth.TokensDTO;
 
 import retrofit2.Call;
@@ -14,4 +16,10 @@ public interface AuthApi {
 
     @GET("check")
     Call<Void> checkAuth();
+
+    @POST("request-reset")
+    Call<Void> requestReset(@Body MailDTO mailDTO);
+
+    @POST("reset-password")
+    Call<Void> resetPassword(@Body ResetPasswordDTO resetPasswordDTO);
 }

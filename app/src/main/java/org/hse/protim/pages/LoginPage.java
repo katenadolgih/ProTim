@@ -11,6 +11,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.auth.RegisterClient;
+import org.hse.protim.clients.retrofit.auth.RegistrationCallback;
 
 public class LoginPage extends BaseActivity {
 

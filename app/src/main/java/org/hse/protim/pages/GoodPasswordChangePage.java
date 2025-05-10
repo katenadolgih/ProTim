@@ -5,38 +5,44 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.hse.protim.R;
 
 public class GoodPasswordChangePage extends BaseActivity {
+
+    private ImageButton backButton;
+    private Button okayButton;
+    private TextView sendEmailMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_good_password_change_page);
 
-        // Настройка кнопки "Назад"
-        ImageButton backButton = findViewById(R.id.button_back);
-        if (backButton != null) {
-            backButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed(); // Закрываем текущую активность
-                }
-            });
-        }
+        init();
+        handle();
+    }
 
-        // Настройка кнопки "Okay"
-        Button okayButton = findViewById(R.id.okayButton);
-        if (okayButton != null) {
-            okayButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Создаем интент для перехода на страницу activity_password_change_log_in_page
-                    Intent intent = new Intent(GoodPasswordChangePage.this, PasswordChangeLogInPage.class);
-                    startActivity(intent);
-                }
-            });
-        }
+    private void init() {
+        backButton = findViewById(R.id.button_back);
+        okayButton = findViewById(R.id.okayButton);
+        sendEmailMessage = findViewById(R.id.send_email_message);
+    }
+
+    private void handle() {
+        backButton.setOnClickListener(v -> onBackPressed());
+        okayButton.setOnClickListener(v -> {
+            Intent intent = new Intent(GoodPasswordChangePage.this, MainActivity.class);
+            startActivity(intent);
+        });
+        setSendEmailMessage();
+    }
+
+    private void setSendEmailMessage() {
+        Intent intent = getIntent();
+        String email = intent.getStringExtra("email");
+        sendEmailMessage.setText("Письмо отправлено на " + email);
     }
 
 }

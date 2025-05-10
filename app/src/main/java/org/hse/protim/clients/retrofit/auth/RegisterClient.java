@@ -10,10 +10,11 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 
 import org.hse.protim.DTO.auth.LoginDTO;
+import org.hse.protim.DTO.auth.MailDTO;
 import org.hse.protim.DTO.auth.RegisterDTO;
+import org.hse.protim.DTO.auth.ResetPasswordDTO;
 import org.hse.protim.DTO.auth.TokensDTO;
 import org.hse.protim.utils.auth.TokenStorage;
-import org.hse.protim.pages.RegistrationCallback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +34,8 @@ public class RegisterClient {
     }
     private static final String REGISTER = "register";
     private static final String SIGN_IN = "sign-in";
+    private static final String REQUEST_RESET = "request-reset";
+    private static final String RESET_PASSWORD = "reset-password";
 
     private static final String TEST = "test";
     OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
@@ -108,6 +111,67 @@ public class RegisterClient {
         });
     }
 
+    public void requestReset(String email, RequestResetCallback callback) {
+        Gson gson = new Gson();
+        String json = gson.toJson(new MailDTO(email));
+
+        RequestBody requestBody = RequestBody.create(
+                json,
+                MediaType.parse("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + REQUEST_RESET)
+                .post(requestBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onError("Network error: " + e.getMessage());
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    callback.onError("Server error: " + response.code());
+                } else {
+                    callback.onSuccess(email);
+                }
+            }
+        });
+    }
+
+    public void resetPassword(String token, String password, RegistrationCallback callback) {
+        Gson gson = new Gson();
+        String json = gson.toJson(new ResetPasswordDTO(password, token));
+
+        RequestBody requestBody = RequestBody.create(
+                json,
+                MediaType.parse("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(BASE_URL + RESET_PASSWORD)
+                .post(requestBody)
+                .build();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                callback.onFailure("Network error: " + e.getMessage());
+            }
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                if (!response.isSuccessful()) {
+                    callback.onFailure("Server error: " + response.code());
+                } else {
+                    callback.onSuccess("");
+                }
+            }
+        });
+    }
+
+
     public void test(RegistrationCallback callback) {
         TokenStorage tokenStorage = new TokenStorage(context);
         String accessToken = tokenStorage.getAccessToken();
@@ -137,5 +201,10 @@ public class RegisterClient {
                 }
             }
         });
+    }
+
+    public interface RequestResetCallback {
+        void onSuccess(String email);
+        void onError(String message);
     }
 }

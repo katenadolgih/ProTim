@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ProTim"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".pages.ProjectDetailsPage"
@@ -40,21 +41,27 @@
             android:exported="false" />
         <activity
             android:name=".pages.PasswordChangeLogInPage"
-            android:exported="false"> <!-- true -->
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-            <!-- <action android:name="android.intent.category.LAUNCHER"/> -->
-            <!-- </intent-filter> -->
+            android:exported="true"> <!-- true -->
 
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW"/>-->
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--                <category android:name="android.intent.category.BROWSABLE"/>-->
+<!--                <data-->
+<!--                    android:scheme="https"-->
+<!--                    android:host="www.protimrf.com"-->
+<!--                    android:pathPrefix="/reset-password"/>-->
+<!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.VIEW"/> -->
-            <!-- <category android:name="android.intent.category.DEFAULT"/> -->
-            <!-- <category android:name="android.intent.category.BROWSABLE"/> -->
-            <!-- <data android:scheme="http" -->
-            <!-- android:host="www.protimrf.com"/> -->
-            <!-- </intent-filter> -->
-
+                <data
+                    android:scheme="protimrf"
+                    android:host="reset-password"
+                    android:pathPattern=".*" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".pages.GoodPasswordChangePage"
@@ -65,11 +72,11 @@
         <activity
             android:name=".pages.SplashActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".pages.RegisterPage"
@@ -77,7 +84,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.LoginPage"
-            android:exported="false">
+            android:exported="true"> <!--false было-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".pages.MainActivity"
