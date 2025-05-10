@@ -68,15 +68,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                 || this instanceof CourseDetailsPage
                 || this instanceof NewProjectsPage
                 || this instanceof PopularProjectsPage
-                || this instanceof NotificationPage) {
+                || this instanceof NotificationPage
+                || this instanceof RatedPage) {
             highlightTab(R.id.icon_home, R.id.text_home);
-        } else if (this instanceof SearchPage) {
+        } else if (this instanceof SearchPage
+                || this instanceof FiltersPage) {
             highlightTab(R.id.icon_search, R.id.text_search);
         } else if (this instanceof CoursesPage) {
             highlightTab(R.id.icon_courses, R.id.text_courses);
         } else if (this instanceof FavoritesPage) {
             highlightTab(R.id.icon_favorites, R.id.text_favorites);
-        } else if (this instanceof ProfilePage) {
+        } else if (this instanceof ProfilePage
+                || this instanceof SettingsPage
+                || this instanceof EditProfilePage) {
             highlightTab(R.id.icon_profile, R.id.text_profile);
         }
     }

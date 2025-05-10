@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RatedPage extends AppCompatActivity {
+public class RatedPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
