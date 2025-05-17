@@ -33,6 +33,5 @@ public class ProjectDetailsPage extends AppCompatActivity {
             intent.putExtra(Intent.EXTRA_TEXT, "Смотри проект в приложении Протим!");
             startActivity(Intent.createChooser(intent, "Поделиться проектом"));
         });
-
     }
 }
