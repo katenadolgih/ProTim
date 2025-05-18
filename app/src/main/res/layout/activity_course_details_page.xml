@@ -1,185 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/course_details_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dot_inactive"
-    android:id="@+id/course_details_page">
+    android:background="@color/dot_inactive">
 
     <!-- Кнопка назад -->
     <ImageButton
         android:id="@+id/button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:background="@android:color/transparent"
         android:contentDescription="@string/go_back"
-        android:src="@drawable/ic_back"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+        android:src="@drawable/ic_back" />
 
-    <LinearLayout
+    <!-- Скролл для контента между кнопкой назад и кнопкой «Записаться» -->
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_below="@id/button_back"
-        android:paddingHorizontal="16dp">
+        android:layout_above="@id/enrollButton"
+        android:overScrollMode="ifContentScrolls">
 
-    <TextView
-        android:id="@+id/courseTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@color/primary"
-        android:text="@string/CourseName"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/courseTitle"
-        android:layout_marginTop="16dp">
-
-        <!-- Первый блок -->
         <LinearLayout
+            android:id="@+id/content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
+            <!-- Заголовок курса -->
             <TextView
-                android:id="@+id/block1Title"
-                android:layout_width="164dp"
+                android:id="@+id/courseTitle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:text="@string/CourseName"
                 android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:text="@string/Format"/>
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/courseDetailsFormat"
-                android:layout_width="0dp"
+            <!-- Первый блок -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="@color/gray_text"
-                android:text="Описание блока 1"/>
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/block1Title"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Format"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/courseDetailsFormat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Описание блока 1"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Второй блок -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/Price"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Price"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/courseDetailsPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Описание блока 2"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Третий блок -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/Duration"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Duration"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/courseDetailsDuration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Описание блока 3"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Четвертый блок -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/who_for"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Who_for"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/courseDetailsWhoWhom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Кому подходит"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Пятый блок -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/Stack"
+                    android:layout_width="164dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Stack"
+                    android:textColor="@color/primary"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/courseDetailsWhatMaster"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Описание технологий"
+                    android:textColor="@color/gray_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Второй блок -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/Price"
-                android:layout_width="164dp"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:text="@string/Price"/>
-
-            <TextView
-                android:id="@+id/courseDetailsPrice"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="@color/gray_text"
-                android:text="Описание блока 2"/>
-        </LinearLayout>
-
-        <!-- Третий блок -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/Duration"
-                android:layout_width="164dp"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:text="@string/Duration"/>
-
-            <TextView
-                android:id="@+id/courseDetailsDuration"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="@color/gray_text"
-                android:text="Описание блока 3"/>
-        </LinearLayout>
-
-        <!-- Четвертый блок -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/who_for"
-                android:layout_width="164dp"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:text="@string/Who_for"/>
-
-            <TextView
-                android:id="@+id/courseDetailsWhoWhom"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="@color/gray_text"
-                android:text="Описание блока 3"/>
-        </LinearLayout>
-
-        <!-- Пятый блок -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/Stack"
-                android:layout_width="164dp"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                android:text="@string/Stack"/>
-
-            <TextView
-                android:id="@+id/courseDetailsWhatMaster"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="14sp"
-                android:textColor="@color/gray_text"
-                android:text="Описание блока 3 jdjdjdjjdjdjdjdjj jdjdjjdjdjdjdjd djdjdjd"/>
-        </LinearLayout>
-    </LinearLayout>
-    </LinearLayout>
     <!-- Кнопка записаться -->
     <Button
         android:id="@+id/enrollButton"
+        style="@style/ButtonTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="@string/enrollCourse"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        style="@style/ButtonTextStyle"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/enrollCourse" />
+
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,12 +18,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import org.hse.protim.DTO.CompanyDTO;
+import org.hse.protim.DTO.SpecialistsDTO;
+import org.hse.protim.DTO.project.ProjectDTO;
+import org.hse.protim.DTO.project.RetLikesDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.projects.ProjectClient;
+import org.hse.protim.clients.retrofit.search.SearchClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +40,27 @@ public class SearchPage extends BaseActivity {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
-    private FlexboxLayout selectedFiltersContainer;
+//    private FlexboxLayout selectedFiltersContainer;
     private ImageButton settingsButton;
-
+    private static ProjectClient projectClient;
+    private RetrofitProvider retrofitProvider;
+    private ProjectsAdapter projectsAdapter;
+    private SpecialistsAdapter specialistsAdapter;
+    private CompaniesAdapter companiesAdapter;
+    private List<ProjectDTO> projectDTOS = new ArrayList<>();
+    private List<SpecialistsDTO> specialistsDTOS = new ArrayList<>();
+    private List<CompanyDTO> companyDTOS = new ArrayList<>();
+    private EditText searchInput;
+    private List<String> selectedSoftware;
+    private List<String> selectedSections;
+    private SearchClient searchClient;
+    private ImageView searchIcon;
+    private ImageView clearSearch;
+    private int startPage;
+    private int beforePage;
+    private String searchInputString;
+    private boolean isFirstTabSelection;
+    private boolean isTabSelected = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,50 +71,172 @@ public class SearchPage extends BaseActivity {
         tabLayout = findViewById(R.id.tab_layout);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new ViewPagerAdapter());
+        startPage = getIntent().getIntExtra("start_page", 0);
+        beforePage = getIntent().getIntExtra("before_page", 0);
+        isFirstTabSelection = true;
+        viewPager.setCurrentItem(startPage, false);
+
+        retrofitProvider = new RetrofitProvider(SearchPage.this);
+        projectClient = new ProjectClient(retrofitProvider);
+        searchClient = new SearchClient(retrofitProvider);
+
+        searchInput = findViewById(R.id.search_input);
+        String searchInputInt = getIntent().getStringExtra("searchInput");
+        searchInputString = searchInputInt == null ? "" : searchInputInt;
+
+        searchInput.setText(searchInputString);
+
+
+        searchIcon = findViewById(R.id.search_icon);
+        clearSearch = findViewById(R.id.clear_search);
+
+        searchIcon.setOnClickListener(v -> loadData());
+        clearSearch.setOnClickListener(v -> searchInput.setText(""));
+        tabLayoutHandle();
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("Проекты"); break;
-                case 1: tab.setText("Специалисты"); break;
-                case 2: tab.setText("Компании"); break;
+                case 0:
+                    tab.setText("Проекты");
+                    break;
+                case 1:
+                    tab.setText("Специалисты");
+                    break;
+                case 2:
+                    tab.setText("Компании");
+                    break;
             }
         }).attach();
 
-        selectedFiltersContainer = findViewById(R.id.selected_filters_container);
-        ArrayList<String> selectedSections = getIntent().getStringArrayListExtra("selected_sections");
-        ArrayList<String> selectedSoftware = getIntent().getStringArrayListExtra("selected_software");
 
-        if (selectedSections != null) {
-            addFilterTags(selectedSections);
-        }
-        if (selectedSoftware != null) {
-            addFilterTags(selectedSoftware);
-        }
+//        selectedFiltersContainer = findViewById(R.id.selected_filters_container);
+//
+//        if (selectedSections != null) {
+//            addFilterTags(selectedSections);
+//        }
+//        if (selectedSoftware != null) {
+//            addFilterTags(selectedSoftware);
+//        }
+        settingsButtonHandle();
+    }
+
+//    private void loadCurr() {
+//        switch(tabLayout.getSelectedTabPosition()) {
+//            case 1:
+//                loadSpecialists();
+//                loadWithoutFilterProjects();
+//                loadWithoutFilterCompanies();
+//                break;
+//            case 2:
+//                loadCompanies();
+//                loadWithoutFilterProjects();
+//                loadWithoutFiltersSpecialists();
+//                break;
+//            default:
+//                loadProjects();
+//                loadWithoutFiltersSpecialists();
+//                loadWithoutFilterCompanies();
+//        }
+//    }
+
+    private void settingsButtonHandle() {
+        ArrayList<String> selectedSectionsIntent = getIntent().getStringArrayListExtra("selected_sections");
+        ArrayList<String> selectedSoftwareIntent = getIntent().getStringArrayListExtra("selected_software");
+
+        selectedSections = selectedSectionsIntent == null || !isTabSelected ? new ArrayList<>() : selectedSectionsIntent;
+        selectedSoftware = selectedSoftwareIntent == null || !isTabSelected ? new ArrayList<>() : selectedSoftwareIntent;
+
         settingsButton.setOnClickListener(v -> {
             Intent intent = new Intent(SearchPage.this, FiltersPage.class);
+            intent.putExtra("searchInput", searchInput.getText().toString());
+            intent.putStringArrayListExtra("selected_sections", selectedSectionsIntent);
+            intent.putStringArrayListExtra("selected_software", selectedSoftwareIntent);
+            intent.putExtra("start_page", tabLayout.getSelectedTabPosition());
+            intent.putExtra("before_page", beforePage);
             startActivity(intent);
         });
     }
 
-    private void addFilterTags(ArrayList<String> filters) {
-        for (String filter : filters) {
-            View view = LayoutInflater.from(this).inflate(R.layout.item_filter_tag, selectedFiltersContainer, false);
-            TextView text = view.findViewById(R.id.tag_text);
-            ImageView close = view.findViewById(R.id.tag_close);
+    private void tabLayoutHandle() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int pos = tab.getPosition();
 
-            text.setText(filter);
-            view.setSelected(true);
-            text.setTextColor(ContextCompat.getColor(this, R.color.white));
-            view.setBackground(ContextCompat.getDrawable(this, R.drawable.tag_selector));
+                if (isFirstTabSelection) {
+                    searchInput.setText(searchInputString);
+                    isFirstTabSelection = false;
+                }
+                else {
+                    searchInput.setText("");
+                    isTabSelected = false;
+                }
 
-            selectedFiltersContainer.addView(view);
+                switch (pos) {
+                    case 1:
+                        searchInput.setHint("Имя специалиста");
+                        settingsButtonHandle();
+                        loadSpecialists();
+                        break;
+                    case 2:
+                        searchInput.setHint("Название компании");
+                        settingsButtonHandle();
+                        loadCompanies();
+                        break;
+                    default:
+                        settingsButtonHandle();
+                        searchInput.setHint("Название проекта");
+                        loadProjects();
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+    }
+
+    private void loadData() {
+        switch (tabLayout.getSelectedTabPosition()) {
+            case 1:
+                loadSpecialists();
+                break;
+            case 2:
+                loadCompanies();
+                break;
+            default:
+                loadProjects();
         }
     }
 
+//    private void addFilterTags(ArrayList<String> filters) {
+//        for (String filter : filters) {
+//            View view = LayoutInflater.from(this).inflate(R.layout.item_filter_tag, selectedFiltersContainer, false);
+//            TextView text = view.findViewById(R.id.tag_text);
+//            ImageView close = view.findViewById(R.id.tag_close);
+//
+//            text.setText(filter);
+//            view.setSelected(true);
+//            text.setTextColor(ContextCompat.getColor(this, R.color.white));
+//            view.setBackground(ContextCompat.getDrawable(this, R.drawable.tag_selector));
+//
+//            selectedFiltersContainer.addView(view);
+//        }
+//    }
+
     // 🔹 ViewPager Adapter
     private class ViewPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        @Override public int getItemCount() { return 3; }
-        @Override public int getItemViewType(int position) { return position; }
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
 
         @NonNull
         @Override
@@ -109,48 +258,57 @@ public class SearchPage extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof ProjectsViewHolder) {
-                ((ProjectsViewHolder) holder).bind(getProjectList());
+                ((ProjectsViewHolder) holder).bind(projectDTOS);
             } else if (holder instanceof SpecialistsViewHolder) {
-                ((SpecialistsViewHolder) holder).bind(getSpecialistList());
+                ((SpecialistsViewHolder) holder).bind(specialistsDTOS);
             } else if (holder instanceof CompaniesViewHolder) {
-                ((CompaniesViewHolder) holder).bind(getCompanyList());
+                ((CompaniesViewHolder) holder).bind(companyDTOS);
             }
         }
 
         // ---------- Holders ----------
         class ProjectsViewHolder extends RecyclerView.ViewHolder {
             RecyclerView recycler;
+
             ProjectsViewHolder(View v) {
                 super(v);
                 recycler = v.findViewById(R.id.recycler_projects);
+                projectsAdapter = new ProjectsAdapter(projectDTOS);
+                recycler.setAdapter(projectsAdapter);
                 recycler.setLayoutManager(new LinearLayoutManager(v.getContext()));
             }
-            void bind(List<Project> items) {
-                recycler.setAdapter(new ProjectsAdapter(items));
+
+            void bind(List<ProjectDTO> items) {
             }
         }
 
         class SpecialistsViewHolder extends RecyclerView.ViewHolder {
             RecyclerView recycler;
+
             SpecialistsViewHolder(View v) {
                 super(v);
                 recycler = v.findViewById(R.id.recycler_specialists);
+                specialistsAdapter = new SpecialistsAdapter(specialistsDTOS);
+                recycler.setAdapter(specialistsAdapter);
                 recycler.setLayoutManager(new GridLayoutManager(v.getContext(), 2));
             }
-            void bind(List<Specialist> items) {
-                recycler.setAdapter(new SpecialistsAdapter(items));
+
+            void bind(List<SpecialistsDTO> items) {
             }
         }
 
         class CompaniesViewHolder extends RecyclerView.ViewHolder {
             RecyclerView recycler;
+
             CompaniesViewHolder(View v) {
                 super(v);
                 recycler = v.findViewById(R.id.recycler_companies);
+                companiesAdapter = new CompaniesAdapter(companyDTOS);
+                recycler.setAdapter(companiesAdapter);
                 recycler.setLayoutManager(new GridLayoutManager(v.getContext(), 2));
             }
-            void bind(List<Company> items) {
-                recycler.setAdapter(new CompaniesAdapter(items));
+
+            void bind(List<CompanyDTO> items) {
             }
         }
 
@@ -159,10 +317,14 @@ public class SearchPage extends BaseActivity {
     // 🔹 Общий адаптер для строк (проекты, компании)
     private class SimpleTextAdapter extends RecyclerView.Adapter<SimpleTextAdapter.ViewHolder> {
         private final List<String> data;
-        SimpleTextAdapter(List<String> data) { this.data = data; }
+
+        SimpleTextAdapter(List<String> data) {
+            this.data = data;
+        }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView text;
+
             ViewHolder(View v) {
                 super(v);
                 text = v.findViewById(android.R.id.text1);
@@ -180,41 +342,16 @@ public class SearchPage extends BaseActivity {
             holder.text.setText(data.get(position));
         }
 
-        public int getItemCount() { return data.size(); }
-    }
-
-    public static class Project {
-        public String description, hashtags, author;
-        public int imageRes, likes;
-        public boolean isLiked, isFavorite;
-
-        public Project(String description, String hashtags, String author,
-                       int imageRes, int likes, boolean isLiked, boolean isFavorite) {
-            this.description = description; this.hashtags = hashtags; this.author = author; this.imageRes = imageRes; this.likes = likes; this.isLiked = isLiked; this.isFavorite = isFavorite;
+        public int getItemCount() {
+            return data.size();
         }
     }
 
-
-    public static class Specialist {
-        public String name, status, city, university;
-        public int imageRes;
-        public Specialist(String name, String status, String city, String university, int imageRes) {
-            this.name = name; this.status = status; this.city = city; this.university = university; this.imageRes = imageRes;
-        }
-    }
-    public static class Company {
-        public String name, status, city;
-        public int imageRes;
-
-        public Company(String name, String status, String city, int imageRes) {
-            this.name = name; this.status = status;  this.city = city; this.imageRes = imageRes;
-        }
-    }
     public static class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
 
-        private final List<Project> projects;
+        private final List<ProjectDTO> projects;
 
-        public ProjectsAdapter(List<Project> projects) {
+        public ProjectsAdapter(List<ProjectDTO> projects) {
             this.projects = projects;
         }
 
@@ -245,37 +382,95 @@ public class SearchPage extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ProjectsAdapter.ViewHolder holder, int position) {
-            Project p = projects.get(position);
+            ProjectDTO p = projects.get(position);
+            Long projectId = p.projectId();
 
-            holder.projectImage.setImageResource(p.imageRes);
-            holder.projectDescription.setText(p.description);
-            holder.projectHashtags.setText(p.hashtags);
-            holder.projectAuthor.setText(p.author);
-            holder.likesCount.setText(String.valueOf(p.likes));
+            Glide.with(holder.itemView.getContext()).clear(holder.projectImage);
+            Glide.with(holder.itemView.getContext())
+                    .load(p.photoPath())
+                    .into(holder.projectImage);
 
-            // Пример: изменение изображения кнопок (если у тебя selector — не обязательно)
-            holder.favoriteButton.setSelected(p.isFavorite);
-            holder.likeButton.setSelected(p.isLiked);
+            holder.projectDescription.setText(p.name());
+            holder.projectHashtags.setText(String.join(" ", p.tags()));
+            holder.projectAuthor.setText(p.fullName());
+            holder.likesCount.setText(String.valueOf(p.likesCount()));
 
-            // Обработчики кликов (можно заменить на коллбэки)
+            projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
+                @Override
+                public void onSuccess(Boolean isLike) {
+                    holder.favoriteButton.setSelected(isLike);
+                }
+
+                @Override
+                public void onError(String message) {
+                }
+            });
+            projectClient.checkLikeStatus(p.projectId(), new ProjectClient.LikeCallback() {
+                @Override
+                public void onSuccess(Boolean isLike) {
+                    holder.likeButton.setSelected(isLike);
+                }
+
+                @Override
+                public void onError(String message) {
+                }
+            });
+
             holder.favoriteButton.setOnClickListener(v -> {
-                p.isFavorite = !p.isFavorite;
-                notifyItemChanged(position);
+                projectClient.updateFavourites(projectId, new ProjectClient.PutLikeCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
+                            @Override
+                            public void onSuccess(Boolean isLike) {
+                                holder.favoriteButton.setSelected(isLike);
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                    }
+                });
             });
 
             holder.likeButton.setOnClickListener(v -> {
-                p.isLiked = !p.isLiked;
-                p.likes += p.isLiked ? 1 : -1;
-                notifyItemChanged(position);
+                projectClient.putLike(projectId, new ProjectClient.PutLikeCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        projectClient.getProjectLikeCount(projectId, new ProjectClient.LikeCountCallback() {
+                            @Override
+                            public void onSuccess(Integer count) {
+                                holder.likesCount.setText(String.valueOf(count));
+                                holder.likeButton.setSelected(!holder.likeButton.isSelected());
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+
+                    }
+                });
             });
 
-            holder.projectAuthor.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "Автор: " + p.author, Toast.LENGTH_SHORT).show();
-            });
-
+//            holder.projectAuthor.setOnClickListener(v -> {
+//                Toast.makeText(v.getContext(), "Автор: " + p.author, Toast.LENGTH_SHORT).show();
+//            });
+//
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), ProjectDetailsPage.class);
-                intent.putExtra("project_name", p.description);
+                intent.putExtra("project_id", p.projectId());
+                intent.putExtra("project_name", p.name());
+                intent.putExtra("author", p.fullName());
                 v.getContext().startActivity(intent);
             });
 
@@ -288,12 +483,16 @@ public class SearchPage extends BaseActivity {
     }
 
     public static class SpecialistsAdapter extends RecyclerView.Adapter<SpecialistsAdapter.ViewHolder> {
-        private final List<Specialist> list;
-        public SpecialistsAdapter(List<Specialist> list) { this.list = list; }
+        private final List<SpecialistsDTO> list;
+
+        public SpecialistsAdapter(List<SpecialistsDTO> list) {
+            this.list = list;
+        }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView photo;
             TextView status, name, city, university;
+
             public ViewHolder(View v) {
                 super(v);
                 photo = v.findViewById(R.id.specialist_photo);
@@ -311,23 +510,39 @@ public class SearchPage extends BaseActivity {
         }
 
         public void onBindViewHolder(ViewHolder h, int i) {
-            Specialist s = list.get(i);
-            h.photo.setImageResource(s.imageRes);
-            h.status.setText(s.status);
-            h.name.setText(s.name);
-            h.city.setText(s.city);
-            h.university.setText(s.university);
+            SpecialistsDTO s = list.get(i);
+            String photoPath = s.photoUrl();
+
+            Glide.with(h.itemView.getContext()).clear(h.photo);
+            Glide.with(h.itemView.getContext())
+                    .load(photoPath)
+                    .error(R.drawable.ic_profile)
+                    .into(h.photo);
+
+
+
+            h.status.setText(s.status());
+            h.name.setText(s.fullName());
+            h.city.setText(s.city());
+            h.university.setText(s.education());
         }
 
-        public int getItemCount() { return list.size(); }
+        public int getItemCount() {
+            return list.size();
+        }
     }
+
     public static class CompaniesAdapter extends RecyclerView.Adapter<CompaniesAdapter.ViewHolder> {
-        private final List<Company> list;
-        public CompaniesAdapter(List<Company> list) { this.list = list; }
+        private final List<CompanyDTO> list;
+
+        public CompaniesAdapter(List<CompanyDTO> list) {
+            this.list = list;
+        }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView logo;
             TextView status, name, city;
+
             public ViewHolder(View v) {
                 super(v);
                 logo = v.findViewById(R.id.company_logo);
@@ -345,46 +560,147 @@ public class SearchPage extends BaseActivity {
         }
 
         public void onBindViewHolder(ViewHolder h, int i) {
-            Company c = list.get(i);
-            h.logo.setImageResource(c.imageRes);
-            h.status.setText(c.status);
-            h.name.setText(c.name);
-            h.city.setText(c.city);
+
+            CompanyDTO c = list.get(i);
+            Glide.with(h.itemView.getContext()).clear(h.itemView);
+
+            Glide.with(h.itemView.getContext())
+                    .load(c.photoPath())
+                    .into(h.logo);
+
+            h.status.setText(c.status());
+            h.name.setText(c.name());
+            h.city.setText(c.city());
         }
 
-        public int getItemCount() { return list.size(); }
+        public int getItemCount() {
+            return list.size();
+        }
     }
     // 🔹 Данные
 
-    private List<Specialist> getSpecialistList() {
-        List<Specialist> list = new ArrayList<>();
-        list.add(new Specialist("Михалева Софья", "Ищу работу", "Пермь", "ПСК", R.drawable.ic_user));
-        list.add(new Specialist("Иванова Алекса", "Открыт к предложениям", "Екатеринбург", "УрФУ", R.drawable.ic_user));
-        list.add(new Specialist("Ипалева Софья", "Ищу работу", "Пермь", "ПСК", R.drawable.ic_user));
-        list.add(new Specialist("Иваненченко Виктория", "Открыт к предложениям", "Екатеринбург", "УрФУ", R.drawable.ic_user));
-        list.add(new Specialist("Ипалева Софья", "Ищу работу", "Пермь", "ПСК", R.drawable.ic_user));
-        list.add(new Specialist("Иваненченко Виктория", "Открыт к предложениям", "Екатеринбург", "УрФУ", R.drawable.ic_user));
-        return list;
+    private void loadSpecialists() {
+        String name = searchInput.getText().toString();
+        searchClient.getFilterSpecialists(name, selectedSections, selectedSoftware, new SearchClient.SpecialistsCallback() {
+            @Override
+            public void onSuccess(List<SpecialistsDTO> specialists) {
+                runOnUiThread(() -> {
+                    specialistsDTOS.clear();
+                    specialistsDTOS.addAll(specialists);
+                    if (specialistsAdapter != null) {
+                        specialistsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(SearchPage.this, message, Toast.LENGTH_LONG).show());
+            }
+        });
     }
 
 
-    private List<Project> getProjectList() {
-        List<Project> list = new ArrayList<>();
-        list.add(new Project("Протим 2.0 — цифровизация инженерного контента", "#BIM #UX #Проектирование",
-                "Иван Петров", R.drawable.photo_project, 124, false, false));
-        list.add(new Project("Умный город — мониторинг объектов ЖКХ", "#SmartCity #IoT",
-                "Софья Кузнецова", R.drawable.photo_project, 98, true, true));
-        list.add(new Project("AI-советник — нейросеть для подбора решений", "#AI #ML #UX",
-                "Алексей Смирнов", R.drawable.photo_project, 243, false, true));
-        return list;
+    private void loadProjects() {
+        String name = searchInput.getText().toString();
+        searchClient.getFilterProjects(name, selectedSections, selectedSoftware, new SearchClient.ProjectCallback() {
+            @Override
+            public void onSuccess(List<ProjectDTO> projects) {
+                runOnUiThread(() -> {
+                    projectDTOS.clear();
+                    projectDTOS.addAll(projects);
+                    if (projectsAdapter != null) {
+                        projectsAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(SearchPage.this, message, Toast.LENGTH_LONG).show());
+            }
+        });
     }
 
 
-    private List<Company> getCompanyList() {
-        List<Company> list = new ArrayList<>();
-        list.add(new Company("Кайрос Инжиниринг", "Ищем специалистов", "Пермь", R.drawable.ic_user));
-        list.add(new Company("Тинькофф", "Активно растем", "Москва", R.drawable.logo_protim_48x48));
-        list.add(new Company("Яндекс", "Удаленная работа", "Санкт-Петербург", R.drawable.logo_protim_48x48));
-        return list;
+    private void loadCompanies() {
+        String name = searchInput.getText().toString();
+        searchClient.getFilterCompanies(name, new SearchClient.CompanyCallback() {
+            @Override
+            public void onSuccess(List<CompanyDTO> companies) {
+                runOnUiThread(() -> {
+                    companyDTOS.clear();
+                    companyDTOS.addAll(companies);
+                    if (companiesAdapter != null) {
+                        companiesAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String message) {
+            }
+        });
     }
+//
+//    private void loadWithoutFiltersSpecialists() {
+//        searchClient.getFilterSpecialists("", null, null, new SearchClient.SpecialistsCallback() {
+//            @Override
+//            public void onSuccess(List<SpecialistsDTO> specialists) {
+//                runOnUiThread(() -> {
+//                    specialistsDTOS.clear();
+//                    specialistsDTOS.addAll(specialists);
+//                    if (specialistsAdapter != null) {
+//                        specialistsAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(String message) {
+//                runOnUiThread(() -> Toast.makeText(SearchPage.this, message, Toast.LENGTH_LONG).show());
+//            }
+//        });
+//    }
+//
+//
+//    private void loadWithoutFilterProjects() {
+//        searchClient.getFilterProjects("", null, null, new SearchClient.ProjectCallback() {
+//            @Override
+//            public void onSuccess(List<ProjectDTO> projects) {
+//                runOnUiThread(() -> {
+//                    projectDTOS.clear();
+//                    projectDTOS.addAll(projects);
+//                    if (projectsAdapter != null) {
+//                        projectsAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(String message) {
+//                runOnUiThread(() -> Toast.makeText(SearchPage.this, message, Toast.LENGTH_LONG).show());
+//            }
+//        });
+//    }
+//
+//
+//    private void loadWithoutFilterCompanies() {
+//        searchClient.getFilterCompanies("", new SearchClient.CompanyCallback() {
+//            @Override
+//            public void onSuccess(List<CompanyDTO> companies) {
+//                runOnUiThread(() -> {
+//                    companyDTOS.clear();
+//                    companyDTOS.addAll(companies);
+//                    if (companiesAdapter != null) {
+//                        companiesAdapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(String message) {
+//            }
+//        });
+//    }
 }

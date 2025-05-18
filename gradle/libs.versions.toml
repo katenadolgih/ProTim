@@ -14,10 +14,12 @@ securityCrypto = "1.1.0-alpha06"
 flexbox = "3.0.0"
 retrofit = "2.11.0"
 glide = "4.16.0"
+photoview = "1.0.3"
 
 [libraries]
 
 #noinspection SimilarGradleDependency
+photoview = {group = "io.getstream", name = "photoview", version.ref = "photoview"}
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 google-flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "flexbox" }

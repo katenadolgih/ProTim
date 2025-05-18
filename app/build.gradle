@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation libs.photoview
     implementation libs.glide
     annotationProcessor libs.glide.compiler
     implementation libs.retrofit

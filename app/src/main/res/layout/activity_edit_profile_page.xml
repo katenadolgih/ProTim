@@ -71,6 +71,44 @@
             android:text="Загрузить файл-резюме"
             android:textColor="@color/active_field" />
 
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Образование"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textSize="16sp"-->
+<!--            android:layout_marginTop="12dp"/>-->
+<!--        <LinearLayout-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                android:id="@+id/et_education"-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:minHeight="40dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:hint="Образование">-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/education_input"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content" />-->
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/btn_add_education"-->
+<!--                android:src="@drawable/ic_add"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:paddingStart="8dp"-->
+<!--                android:layout_gravity="bottom"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content" />-->
+<!--        </LinearLayout>-->
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,31 +116,13 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_marginTop="12dp"/>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_education"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="40dp"
-                android:hint="Город">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageButton
-                android:id="@+id/btn_add_education"
-                android:src="@drawable/ic_add"
-                android:background="@android:color/transparent"
-                android:paddingStart="8dp"
-                android:layout_gravity="bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <!-- КОНТЕЙНЕР для полей Образование -->
+        <LinearLayout
+            android:id="@+id/education_fields_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,37 +136,23 @@
             android:id="@+id/et_telegram"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
             android:hint="Telegram">
+
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/telegram_input"
+                android:textColor="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/contact_fields_container"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_contacts"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="40dp"
-                android:hint="Ссылки на соц.сети">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <ImageButton
-                android:id="@+id/btn_add_contact"
-                android:src="@drawable/ic_add"
-                android:paddingStart="8dp"
-                android:layout_gravity="bottom"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -162,9 +168,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="О себе">
+
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/about_input"
+                android:textColor="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"/>
+                android:layout_height="100dp" />
         </com.google.android.material.textfield.TextInputLayout>
         <Button
             android:id="@+id/save_button"

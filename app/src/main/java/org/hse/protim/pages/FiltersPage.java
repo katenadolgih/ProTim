@@ -15,34 +15,55 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.hse.protim.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FiltersPage extends BaseActivity {
 
     private TextView titleView;
     private String[] sections = {"ГП", "АС", "АР", "ВК", "ВС", "ЭО", "ГР", "КЖ", "КМ", "КД", "НВ", "НК", "НВК", "ОВ", "ТХ", "ЭС", "ЭН", "ЭМ"};
-    private String[] software = {"Allplan", "Autocad", "ArchiCad", "Pilot", "BIM Wizard", "NanoCad", "Pilot", "BIM Wizard", "NanoCad", "Pilot", "BIM Wizard", "NanoCad"};
-
-    private ArrayList<String> selectedSections = new ArrayList<>();
-    private ArrayList<String> selectedSoftware = new ArrayList<>();
+    private String[] software = {"Allplan", "Renga", "Revit", "Компас 3D", "BIM WIZARD", "ArchiCAD", "AutoCAD", "nanoCAD", "Pilot Ice"};
+    private ArrayList<String> selectedSections;
+    private ArrayList<String> selectedSoftware;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters_page);
 
-        FlexboxLayout sectionContainer = findViewById(R.id.section_container);
+        FlexboxLayout sectionContainer = findViewById(R.id.software_container);
         FlexboxLayout softwareContainer = findViewById(R.id.software_container);
         Button applyButton = findViewById(R.id.apply_button);
         titleView = findViewById(R.id.title_text);
 
+        ArrayList<String> selectedSectionsIntent = getIntent().getStringArrayListExtra("selected_sections");
+        ArrayList<String> selectedSoftwareIntent = getIntent().getStringArrayListExtra("selected_software");
+
+        int beforePage = getIntent().getIntExtra("before_page", 0);
+        int startPage = getIntent().getIntExtra("start_page", 0);
+
+        selectedSections = selectedSectionsIntent == null || beforePage != startPage
+                ? new ArrayList<>()
+                : selectedSectionsIntent;
+
+        selectedSoftware = selectedSoftwareIntent == null || beforePage != startPage
+                ? new ArrayList<>()
+                : selectedSoftwareIntent;
+
+        if (startPage != beforePage) {
+            beforePage = startPage;
+        }
 
         addTags(sectionContainer, sections, selectedSections);
         addTags(softwareContainer, software, selectedSoftware);
 
+        int finalBeforePage = beforePage;
         applyButton.setOnClickListener(v -> {
             Intent intent = new Intent(FiltersPage.this, SearchPage.class);
             intent.putStringArrayListExtra("selected_sections", selectedSections);
             intent.putStringArrayListExtra("selected_software", selectedSoftware);
+            intent.putExtra("searchInput", getIntent().getStringExtra("searchInput"));
+            intent.putExtra("start_page", startPage);
+            intent.putExtra("before_page", finalBeforePage);
             startActivity(intent);
         });
 
@@ -52,14 +73,18 @@ public class FiltersPage extends BaseActivity {
 
     }
 
-    private void addTags(FlexboxLayout container, String[] tags, ArrayList<String> selectedList) {
+    private void addTags(FlexboxLayout container, String[] tags, List<String> selectedList) {
         for (String tag : tags) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_filter_tag, container, false);
             TextView text = view.findViewById(R.id.tag_text);
             ImageView close = view.findViewById(R.id.tag_close);
 
             text.setText(tag);
-            view.setSelected(false);
+
+            boolean isSelectedView = selectedList.contains(text.getText().toString());
+            view.setSelected(isSelectedView);
+            text.setTextColor(ContextCompat.getColor(this, isSelectedView ? R.color.white : R.color.active_field));
+
 
             view.setOnClickListener(v -> {
                 boolean isSelected = v.isSelected();

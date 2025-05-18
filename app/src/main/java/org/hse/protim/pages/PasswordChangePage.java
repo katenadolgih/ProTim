@@ -7,12 +7,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.auth.RegisterClient;
 
-public class PasswordChangePage extends BaseActivity {
+public class PasswordChangePage extends AppCompatActivity {
 
     private ImageButton backButton;
     private Button submitButton;
@@ -60,6 +62,7 @@ public class PasswordChangePage extends BaseActivity {
                 public void onSuccess(String email) {
                     Intent intent = new Intent(PasswordChangePage.this, GoodPasswordChangePage.class);
                     intent.putExtra("email", email);
+                    intent.putExtra("page", "reset");
                     startActivity(intent);
                 }
 

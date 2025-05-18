@@ -7,13 +7,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.auth.RegisterClient;
 import org.hse.protim.clients.retrofit.auth.RegistrationCallback;
 
-public class LoginPage extends BaseActivity {
+public class LoginPage extends AppCompatActivity {
 
     private TextInputLayout textInputLayoutLogin, textInputLayoutPassword;
     private Button loginButton;

@@ -13,15 +13,13 @@ import retrofit2.Response;
 
 public class ProjectClient {
     private final ProjectApi projectApi;
-    private final RetrofitProvider retrofitProvider;
 
     public ProjectClient(RetrofitProvider retrofitProvider) {
         this.projectApi = retrofitProvider.getAuthorizedRetrofit().create(ProjectApi.class);
-        this.retrofitProvider = retrofitProvider;
     }
 
     public void getProjects(String filter, Integer count, ProjectCallback callback) {
-        projectApi.getNewProjects(filter, count).enqueue(new Callback<List<ProjectDTO>>() {
+        projectApi.getNewProjects(filter, count).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -142,6 +140,20 @@ public class ProjectClient {
 
             @Override
             public void onFailure(Call<List<RetLikesDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getAuthorProjects(ProjectCallback callback) {
+        projectApi.getAuthorProjects().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProjectDTO>> call, Throwable throwable) {
                 callback.onError(throwable.getMessage());
             }
         });

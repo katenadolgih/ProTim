@@ -48,4 +48,8 @@ public interface ProjectApi {
     Call<List<RetLikesDTO>> getLikes(
             @Path("projectId") Long projectId
     );
+
+    @GET("projects/author-projects")
+    Call<List<ProjectDTO>> getAuthorProjects(
+    );
 }

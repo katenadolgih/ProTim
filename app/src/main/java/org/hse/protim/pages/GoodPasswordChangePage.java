@@ -7,13 +7,18 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.hse.protim.R;
 
-public class GoodPasswordChangePage extends BaseActivity {
+public class GoodPasswordChangePage extends AppCompatActivity {
 
     private ImageButton backButton;
     private Button okayButton;
     private TextView sendEmailMessage;
+    private String email;
+    private String page;
+    private TextView changePasswordText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,9 @@ public class GoodPasswordChangePage extends BaseActivity {
         backButton = findViewById(R.id.button_back);
         okayButton = findViewById(R.id.okayButton);
         sendEmailMessage = findViewById(R.id.send_email_message);
+        email = getIntent().getStringExtra("email");
+        page = getIntent().getStringExtra("page");
+        changePasswordText = findViewById(R.id.change_password_text);
     }
 
     private void handle() {
@@ -40,9 +48,12 @@ public class GoodPasswordChangePage extends BaseActivity {
     }
 
     private void setSendEmailMessage() {
-        Intent intent = getIntent();
-        String email = intent.getStringExtra("email");
-        sendEmailMessage.setText("Письмо отправлено на " + email);
+        if (!page.equals("register")) {
+            sendEmailMessage.setText("Письмо отправлено на " + email);
+        } else {
+            sendEmailMessage.setText("Письмо с паролем отправлено на " + email);
+            changePasswordText.setText("Регистрация");
+        }
     }
 
 }

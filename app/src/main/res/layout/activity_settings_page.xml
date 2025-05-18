@@ -50,12 +50,13 @@
                     android:src="@drawable/ic_profile"/>
 
                 <View
+                    android:id="@+id/photo_icon_main"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#80000000"/>
+                    android:background="#80000000" />
 
                 <ImageView
-                    android:id="@+id/photoIcon"
+                    android:id="@+id/photo_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
@@ -83,9 +84,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Фамилия">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/surname_setting"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -93,9 +96,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Имя">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/name_setting"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Spinner
@@ -115,9 +120,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Город">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/city_setting"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -125,12 +132,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Дата рождения">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/birthday_date_setting"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         app:endIconDrawable="@drawable/ic_calendar"
-                        app:endIconMode="custom"
-                        android:inputType="textEmailAddress"/>
+                        app:endIconMode="custom" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -138,10 +147,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email">
+
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_setting"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"/>
+                        android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- === Статус === -->

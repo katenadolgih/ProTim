@@ -13,6 +13,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.hse.protim.R;
@@ -20,7 +22,7 @@ import org.hse.protim.clients.retrofit.auth.RegisterClient;
 import org.hse.protim.clients.retrofit.auth.RegistrationCallback;
 import org.hse.protim.utils.ValidationUtils;
 
-public class RegisterPage extends BaseActivity {
+public class RegisterPage extends AppCompatActivity {
 
     private TextInputLayout textInputLayoutSurname;
     private TextInputLayout textInputLayoutName;
@@ -187,9 +189,9 @@ public class RegisterPage extends BaseActivity {
             @Override
             public void onSuccess(String email) {
                 runOnUiThread(() -> {
-                    Toast.makeText(RegisterPage.this,
-                            "Пароль отправлен на " + email, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(RegisterPage.this, LoginPage.class);
+                    Intent intent = new Intent(RegisterPage.this, GoodPasswordChangePage.class);
+                    intent.putExtra("email", email);
+                    intent.putExtra("page", "register");
                     startActivity(intent);
                 });
             }
