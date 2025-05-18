@@ -14,4 +14,5 @@
     <color name="gray_search_text">#B8B8B8</color>
     <color name="red">#FF4F4F</color>
     <color name="photo_background_color">#E5E4E4</color>
+    <color name="gray_date_text">#646464</color>
 </resources>

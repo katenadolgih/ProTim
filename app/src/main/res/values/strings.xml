@@ -67,4 +67,7 @@
     <string name="buttonSave">Сохранить</string>
     <string name="edit_profile_page_title">Редактировать профиль</string>
     <string name="Share">Поделиться</string>
+    <string name="programm_page_title">Программа</string>
+    <string name="lesson_number">Номер урока</string>
+    <string name="Next_lesson">Следующий урок</string>
 </resources>
