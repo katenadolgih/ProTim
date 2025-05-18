@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="16dp">
+
+    <!-- Номер и название модуля -->
+    <TextView
+        android:id="@+id/moduleTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Модуль 4. Проектирование «Дома мечты» с использованием ТИМ."
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@android:color/black" />
+
+    <!-- Номер и название подмодуля -->
+    <TextView
+        android:id="@+id/submoduleTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="4.1. Показ функциональных возможностей"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"
+        android:textColor="@android:color/black"
+        android:visibility="gone" />
+
+    <!-- Список уроков -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lessonsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:nestedScrollingEnabled="false" />
+</LinearLayout>

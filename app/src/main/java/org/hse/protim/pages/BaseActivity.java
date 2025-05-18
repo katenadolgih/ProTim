@@ -74,7 +74,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else if (this instanceof SearchPage
                 || this instanceof FiltersPage) {
             highlightTab(R.id.icon_search, R.id.text_search);
-        } else if (this instanceof CoursesPage) {
+        } else if (this instanceof CoursesPage
+                || this instanceof ProgramPage
+                || this instanceof LessonPage) {
             highlightTab(R.id.icon_courses, R.id.text_courses);
         } else if (this instanceof FavoritesPage) {
             highlightTab(R.id.icon_favorites, R.id.text_favorites);

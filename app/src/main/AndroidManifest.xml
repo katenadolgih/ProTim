@@ -27,6 +27,12 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
+            android:name=".pages.LessonPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.ProgramPage"
+            android:exported="false" />
+        <activity
             android:name=".pages.EditProfilePage"
             android:exported="false" />
         <activity
