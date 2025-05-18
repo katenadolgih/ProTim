@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RatedPage extends AppCompatActivity {
+public class RatedPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
@@ -39,7 +39,6 @@ public class RatedPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_rated_page);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rated_page), (v, insets) -> {

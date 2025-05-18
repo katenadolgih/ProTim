@@ -14,7 +14,6 @@ public class FavoritesPage extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_favorites_page);
 
         // Обработка Insets для корректного отображения

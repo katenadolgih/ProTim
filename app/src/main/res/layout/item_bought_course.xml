@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="132dp"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:id="@+id/courseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="68dp"
+            android:text="Название курса по проектированию чего-то  там с видео и текстом Название курса по проектированию чего-то  там с видео и текстом Название курса по проектированию чего-то  там с видео и текстом"
+            android:textColor="@color/primary"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:padding="1dp">
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_calendar"/>
+        <TextView
+            android:id="@+id/courseDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12.12.12 - 22.12.25"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/gray_date_text"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+        <!-- Линия прогресса -->
+        <ProgressBar
+            android:id="@+id/courseProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_marginTop="12dp"
+            android:progress="0"
+            android:max="100"
+            android:progressDrawable="@drawable/progress_bar_custom"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

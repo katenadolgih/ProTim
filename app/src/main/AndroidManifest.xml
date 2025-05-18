@@ -15,6 +15,21 @@
         android:theme="@style/Theme.ProTim"
         tools:targetApi="31">
         <activity
+            android:name=".pages.LessonPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.ProgramPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.EditProfilePage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.SettingsPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.ProjectDetailsPage"
+            android:exported="false" />
+        <activity
             android:name=".pages.FiltersPage"
             android:exported="false" />
         <activity

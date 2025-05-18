@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_pen"
+        android:title="Редактировать профиль" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_set"
+        android:title="Настройки" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="Выход"
+        android:titleTextColor="@color/red" />
+</menu>
