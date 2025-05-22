@@ -181,16 +181,16 @@ public class SettingsPage extends BaseActivity {
         profileClient.getProfileSettingInfo(new ProfileClient.ProfileSettingInfoCallback() {
             @Override
             public void onSuccess(ProfileSettingInfoDTO profileSettingInfoDTO) {
-                String surnameGet = profileSettingInfoDTO.surname();
-                String nameGet = profileSettingInfoDTO.name();
-                String cityGet = profileSettingInfoDTO.city();
-                String birthDayGet = profileSettingInfoDTO.birthday();
-                String emailGet = profileSettingInfoDTO.email();
-                Boolean cbHideBirthDateGet = profileSettingInfoDTO.isHideBirthday();
-                Boolean cbPublicProfileGet = profileSettingInfoDTO.isPublic();
-                String statusGet = profileSettingInfoDTO.status();
-                String photoPath = profileSettingInfoDTO.photoPath();
-                String genderGet = profileSettingInfoDTO.gender();
+                String surnameGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.surname() : null;
+                String nameGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.name() : null;
+                String cityGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.city() : null;
+                String birthDayGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.birthday() : null;
+                String emailGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.email() : null;
+                Boolean cbHideBirthDateGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.isHideBirthday() : null;
+                Boolean cbPublicProfileGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.isPublic() : null;
+                String statusGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.status() : null;
+                String photoPath = profileSettingInfoDTO != null ? profileSettingInfoDTO.photoPath() : null;
+                String genderGet = profileSettingInfoDTO != null ? profileSettingInfoDTO.gender() : null;
 
 
                 surname.setText(surnameGet == null ? "" : surnameGet);

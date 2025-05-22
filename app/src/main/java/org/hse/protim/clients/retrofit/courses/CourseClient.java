@@ -1,9 +1,9 @@
 package org.hse.protim.clients.retrofit.courses;
 
-import static org.hse.protim.clients.retrofit.RetrofitProvider.BASE_URL;
-
-import org.hse.protim.DTO.courses.CourseDetail;
+import org.hse.protim.DTO.courses.CourseDetailDTO;
 import org.hse.protim.DTO.courses.CoursePreviewDTO;
+import org.hse.protim.DTO.courses.CourseProgramDTO;
+import org.hse.protim.DTO.courses.OwnedCourseDTO;
 import org.hse.protim.clients.retrofit.RetrofitProvider;
 
 import java.util.List;
@@ -11,8 +11,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CourseClient {
     private final CourseApi courseApi;
@@ -58,9 +56,9 @@ public class CourseClient {
     }
 
     public void getCourseDetail(Long courseId, CourseDetailCallback callback) {
-        courseApi.getCourseDetail(courseId).enqueue(new Callback<CourseDetail>() {
+        courseApi.getCourseDetail(courseId).enqueue(new Callback<CourseDetailDTO>() {
             @Override
-            public void onResponse(Call<CourseDetail> call, Response<CourseDetail> response) {
+            public void onResponse(Call<CourseDetailDTO> call, Response<CourseDetailDTO> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     callback.onSuccess(response.body());
                 } else {
@@ -69,12 +67,55 @@ public class CourseClient {
             }
 
             @Override
-            public void onFailure(Call<CourseDetail> call, Throwable t) {
+            public void onFailure(Call<CourseDetailDTO> call, Throwable t) {
                 callback.onError(t.getMessage());
             }
         });
     }
 
+    public void getOwnedCourse(OwnedCourseCallback callback) {
+        courseApi.getOwnedCourse().enqueue(new Callback<List<OwnedCourseDTO>>() {
+            @Override
+            public void onResponse(Call<List<OwnedCourseDTO>> call, Response<List<OwnedCourseDTO>> response) {
+                callback.onSuccess(response.body());
+
+            }
+
+            @Override
+            public void onFailure(Call<List<OwnedCourseDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+
+            }
+        });
+    }
+
+    public void getCourseProgram(Long courseId, CourseProgramCallback callback) {
+        courseApi.getCourseProgram(courseId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<CourseProgramDTO>> call, Response<List<CourseProgramDTO>> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<CourseProgramDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getLastSeenProgram(Long courseId, LastSeenProgramCallback callback) {
+        courseApi.getLastSeenProgram(courseId).enqueue(new Callback<CourseProgramDTO>() {
+            @Override
+            public void onResponse(Call<CourseProgramDTO> call, Response<CourseProgramDTO> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CourseProgramDTO> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
 
     public interface CourseCallback {
         void onSuccess(List<CoursePreviewDTO> courses);
@@ -82,7 +123,22 @@ public class CourseClient {
     }
 
     public interface CourseDetailCallback {
-        void onSuccess(CourseDetail courseDetail);
+        void onSuccess(CourseDetailDTO courseDetailDTO);
+        void onError(String message);
+    }
+
+    public interface OwnedCourseCallback {
+        void onSuccess(List<OwnedCourseDTO> ownedCourseDTO);
+        void onError(String message);
+    }
+
+    public interface CourseProgramCallback {
+        void onSuccess(List<CourseProgramDTO> courseProgramDTOS);
+        void onError(String message);
+    }
+
+    public interface LastSeenProgramCallback {
+        void onSuccess(CourseProgramDTO courseProgramDTO);
         void onError(String message);
     }
 }

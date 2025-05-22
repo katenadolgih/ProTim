@@ -30,8 +30,8 @@ public class FiltersPage extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filters_page);
 
-        FlexboxLayout sectionContainer = findViewById(R.id.software_container);
-        FlexboxLayout softwareContainer = findViewById(R.id.software_container);
+        FlexboxLayout sectionContainer = findViewById(R.id.section_container_filter);
+        FlexboxLayout softwareContainer = findViewById(R.id.software_container_filer);
         Button applyButton = findViewById(R.id.apply_button);
         titleView = findViewById(R.id.title_text);
 

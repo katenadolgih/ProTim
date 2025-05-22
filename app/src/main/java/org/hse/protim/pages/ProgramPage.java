@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,15 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.hse.protim.R;
+import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
+import org.hse.protim.DTO.courses.CourseProgramDTO;
+import org.hse.protim.DTO.lesson.LessonPreviewDTO;
+import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.courses.CourseClient;
+import org.hse.protim.clients.retrofit.lesson.LessonClient;
+
+import java.util.Collections;
 import java.util.List;
 
 public class ProgramPage extends BaseActivity {
@@ -23,6 +33,11 @@ public class ProgramPage extends BaseActivity {
     private ImageButton buttonBack;
     private TextView titleView;
     private RecyclerView recyclerModules;
+    private RecyclerView recyclerRecentlyModules;
+    private Long courseId;
+    private RetrofitProvider retrofitProvider;
+    private CourseClient courseClient;
+    private static LessonClient lessonClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,62 +49,60 @@ public class ProgramPage extends BaseActivity {
 
         titleView.setText(R.string.programm_page_title);
 
-        // Пример данных
-        List<Module> modules = new ArrayList<>();
-
-        List<Lesson> lessons1 = new ArrayList<>();
-        lessons1.add(new Lesson("Урок 1.", "Введение в проект", "Анна Петрова"));
-        lessons1.add(new Lesson("Урок 2.", "Показ лучших проектов", "Леонид Шелковников"));
-
-        List<Lesson> lessons2 = new ArrayList<>();
-        lessons2.add(new Lesson("Урок 1.", "Создание эскиза", "Мария Иванова"));
-        lessons2.add(new Lesson("Урок 2.", "Обсуждение идей", "Алексей Смирнов"));
-
-        modules.add(new Module("Модуль 1: Знакомство", lessons1));
-        modules.add(new Module("Модуль 2: Практика", lessons2));
-
-        recyclerModules.setLayoutManager(new LinearLayoutManager(this));
-        recyclerModules.setAdapter(new ModuleAdapter(modules));
+        setRecyclerModules();
+        setRecyclerRecentlyModules();
     }
 
+    private void setRecyclerRecentlyModules() {
+        courseClient.getLastSeenProgram(courseId, new CourseClient.LastSeenProgramCallback() {
+            @Override
+            public void onSuccess(CourseProgramDTO courseProgramDTO) {
+                recyclerRecentlyModules.setLayoutManager(new LinearLayoutManager(ProgramPage.this));
+                recyclerRecentlyModules.setAdapter(new ModuleAdapter(Collections.singletonList(courseProgramDTO)));
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(ProgramPage.this, message, Toast.LENGTH_LONG)
+                        .show());
+            }
+        });
+    }
+
+    private void setRecyclerModules() {
+        courseClient.getCourseProgram(courseId, new CourseClient.CourseProgramCallback() {
+            @Override
+            public void onSuccess(List<CourseProgramDTO> courseProgramDTOS) {
+                recyclerModules.setLayoutManager(new LinearLayoutManager(ProgramPage.this));
+                recyclerModules.setAdapter(new ModuleAdapter(courseProgramDTOS));
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(ProgramPage.this, message, Toast.LENGTH_LONG)
+                        .show());
+            }
+        });
+    }
     private void init() {
         buttonBack = findViewById(R.id.button_back);
         titleView = findViewById(R.id.title_text);
         recyclerModules = findViewById(R.id.recyclerModules);
+        recyclerRecentlyModules = findViewById(R.id.recyclerRecentModule);
+        courseId = getIntent().getLongExtra("courseId", 0);
+        retrofitProvider = new RetrofitProvider(ProgramPage.this);
+        courseClient = new CourseClient(retrofitProvider);
+        lessonClient = new LessonClient(retrofitProvider);
     }
 
     private void handle() {
         buttonBack.setOnClickListener(v -> onBackPressed());
     }
 
-    // ===== МОДЕЛИ =====
-    static class Lesson {
-        String number;
-        String title;
-        String teacher;
-
-        Lesson(String number, String title, String teacher) {
-            this.number = number;
-            this.title = title;
-            this.teacher = teacher;
-        }
-    }
-
-    static class Module {
-        String title;
-        List<Lesson> lessons;
-
-        Module(String title, List<Lesson> lessons) {
-            this.title = title;
-            this.lessons = lessons;
-        }
-    }
-
-    // ===== АДАПТЕРЫ =====
     static class ModuleAdapter extends RecyclerView.Adapter<ModuleAdapter.ModuleViewHolder> {
-        private final List<Module> modules;
+        private final List<CourseProgramDTO> modules;
 
-        ModuleAdapter(List<Module> modules) {
+        ModuleAdapter(List<CourseProgramDTO> modules) {
             this.modules = modules;
         }
 
@@ -113,10 +126,10 @@ public class ProgramPage extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ModuleViewHolder holder, int position) {
-            Module module = modules.get(position);
-            holder.moduleTitle.setText(module.title);
+            CourseProgramDTO module = modules.get(position);
+            holder.moduleTitle.setText(module.moduleName());
             holder.lessonRecycler.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-            holder.lessonRecycler.setAdapter(new LessonAdapter(module.lessons));
+            holder.lessonRecycler.setAdapter(new LessonAdapter(module.lessonPreviewDTOS()));
         }
 
         @Override
@@ -126,19 +139,21 @@ public class ProgramPage extends BaseActivity {
     }
 
     static class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonViewHolder> {
-        private final List<Lesson> lessons;
+        private final List<LessonPreviewDTO> lessons;
 
-        LessonAdapter(List<Lesson> lessons) {
+        LessonAdapter(List<LessonPreviewDTO> lessons) {
             this.lessons = lessons;
         }
 
         static class LessonViewHolder extends RecyclerView.ViewHolder {
             TextView titleAndNumber, teacher;
+            ImageView teacherAvatar;
 
             LessonViewHolder(View itemView) {
                 super(itemView);
                 titleAndNumber = itemView.findViewById(R.id.lessonNumberAndTitle);
                 teacher = itemView.findViewById(R.id.lessonTeacher);
+                teacherAvatar = itemView.findViewById(R.id.teacherAvatar);
             }
         }
 
@@ -151,17 +166,38 @@ public class ProgramPage extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull LessonViewHolder holder, int position) {
-            Lesson lesson = lessons.get(position);
-            String fullText = lesson.number + " " + lesson.title;
-            holder.titleAndNumber.setText(fullText);
-            holder.teacher.setText(lesson.teacher);
+            LessonPreviewDTO lesson = lessons.get(position);
+            Long lessonId = lesson.id();
+
+            holder.titleAndNumber.setText(lesson.name());
+            holder.teacher.setText(lesson.authorName());
+
+            Glide.with(holder.teacherAvatar.getContext()).clear(holder.teacherAvatar);
+            Glide.with(holder.teacherAvatar.getContext())
+                    .load(lesson.authorPhotoPath())
+                    .into(holder.teacherAvatar);
+
 
             holder.itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, LessonPage.class);
-                intent.putExtra("title", fullText);
-                intent.putExtra("teacher", lesson.teacher);
+                intent.putExtra("lessonId", lesson.id());
                 context.startActivity(intent);
+                lessonClient.updateLastLesson(lessonId, new LessonClient.UpdateLastLessonCallback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Activity activity = (Activity) v.getContext();
+                        activity.runOnUiThread(() ->
+                                Toast.makeText(activity,
+                                                message,
+                                                Toast.LENGTH_SHORT)
+                                        .show());
+                    }
+                });
             });
         }
 

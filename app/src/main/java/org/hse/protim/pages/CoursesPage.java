@@ -19,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.courses.OwnedCourseDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.courses.CourseClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +30,9 @@ import java.util.List;
 public class CoursesPage extends BaseActivity {
 
     RecyclerView recyclerView;
-    TextView emptyMessage;
-    List<Course> courseList;
+    TextView emptyMessage;;
+    private RetrofitProvider retrofitProvider;
+    private CourseClient courseClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,77 +45,68 @@ public class CoursesPage extends BaseActivity {
     private void init() {
         recyclerView = findViewById(R.id.coursesRecyclerView);
         emptyMessage = findViewById(R.id.emptyMessage);
-        courseList = getMockCourses(); // Временно
+        retrofitProvider = new RetrofitProvider(CoursesPage.this);
+        courseClient = new CourseClient(retrofitProvider);
     }
 
     private void handle() {
-        if (courseList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyMessage.setVisibility(View.VISIBLE);
+        courseClient.getOwnedCourse(new CourseClient.OwnedCourseCallback() {
+            @Override
+            public void onSuccess(List<OwnedCourseDTO> ownedCourseDTO) {
+                if (ownedCourseDTO.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyMessage.setVisibility(View.VISIBLE);
 
-            String fullText = "Похоже у вас пока нет курсов к прохождению, выберите подходящий в разделе Актуальные курсы.";
-            SpannableString ss = new SpannableString(fullText);
+                    String fullText = "Похоже у вас пока нет курсов к прохождению, выберите подходящий в разделе Актуальные курсы.";
+                    SpannableString ss = new SpannableString(fullText);
 
-            int start = fullText.indexOf("Актуальные курсы");
-            int end = start + "Актуальные курсы".length();
+                    int start = fullText.indexOf("Актуальные курсы");
+                    int end = start + "Актуальные курсы".length();
 
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                @Override
-                public void onClick(@NonNull View widget) {
-                    Toast.makeText(CoursesPage.this, "Переход на Актуальные курсы", Toast.LENGTH_SHORT).show();
+                    ClickableSpan clickableSpan = new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            Toast.makeText(CoursesPage.this, "Переход на Актуальные курсы", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void updateDrawState(@NonNull TextPaint ds) {
+                            super.updateDrawState(ds);
+                            ds.setColor(getResources().getColor(R.color.active_field));
+                            ds.setFakeBoldText(true);
+                            ds.setUnderlineText(false);
+                        }
+                    };
+
+                    ss.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    emptyMessage.setText(ss);
+                    emptyMessage.setMovementMethod(LinkMovementMethod.getInstance());
+
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyMessage.setVisibility(View.GONE);
+
+                    CourseAdapter adapter = new CourseAdapter(CoursesPage.this, ownedCourseDTO);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(CoursesPage.this));
+                    recyclerView.setAdapter(adapter);
                 }
+            }
 
-                @Override
-                public void updateDrawState(@NonNull TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setColor(getResources().getColor(R.color.active_field));
-                    ds.setFakeBoldText(true);
-                    ds.setUnderlineText(false);
-                }
-            };
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(CoursesPage.this, message, Toast.LENGTH_LONG)
+                        .show());
+            }
+        });
 
-            ss.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            emptyMessage.setText(ss);
-            emptyMessage.setMovementMethod(LinkMovementMethod.getInstance());
-
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyMessage.setVisibility(View.GONE);
-
-            CourseAdapter adapter = new CourseAdapter(this, courseList);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapter);
-        }
     }
 
-    // Пример курсов
-    private List<Course> getMockCourses() {
-        List<Course> list = new ArrayList<>();
-        list.add(new Course("Курс по Android", "12.03 – 25.04", 30));
-        list.add(new Course("Figma для начинающих", "01.04 – 10.05", 80));
-        return list;
-    }
-
-    // Модель
-    public static class Course {
-        public String title;
-        public String dates;
-        public int progress;
-
-        public Course(String title, String dates, int progress) {
-            this.title = title;
-            this.dates = dates;
-            this.progress = progress;
-        }
-    }
-
-    // Адаптер
     public static class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
-        private final List<Course> courses;
+        private final List<OwnedCourseDTO> courses;
         private final Context context;
 
-        public CourseAdapter(Context context, List<Course> courses) {
+        public CourseAdapter(Context context, List<OwnedCourseDTO> courses) {
             this.context = context;
             this.courses = courses;
         }
@@ -137,15 +132,14 @@ public class CoursesPage extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-            Course course = courses.get(position);
-            holder.title.setText(course.title);
-            holder.dates.setText(course.dates);
-            holder.progressBar.setProgress(course.progress);
+            OwnedCourseDTO course = courses.get(position);
+            holder.title.setText(course.name());
+            holder.dates.setText(course.courseDate());
+            holder.progressBar.setProgress(course.progress());
 
-            // Переход на ProgramPage
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ProgramPage.class);
-                intent.putExtra("courseTitle", course.title); // можно передавать название
+                intent.putExtra("courseId", course.courseId());
                 context.startActivity(intent);
             });
         }

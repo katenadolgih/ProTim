@@ -1,18 +1,16 @@
 package org.hse.protim.pages;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import org.hse.protim.DTO.courses.CourseDetail;
+import org.hse.protim.DTO.courses.CourseDetailDTO;
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.RetrofitProvider;
 import org.hse.protim.clients.retrofit.courses.CourseClient;
@@ -68,13 +66,13 @@ public class CourseDetailsPage extends BaseActivity {
     private void setData() {
         courseClient.getCourseDetail(courseId, new CourseClient.CourseDetailCallback() {
             @Override
-            public void onSuccess(CourseDetail courseDetail) {
-                courseTitle.setText(courseDetail.name());
-                courseDetailsFormat.setText(courseDetail.format());
-                courseDetailsPrice.setText(courseDetail.price());
-                courseDetailsDuration.setText(courseDetail.duration());
-                courseDetailsWhoWhom.setText(courseDetail.whoWhom());
-                courseDetailsWhatMaster.setText(courseDetail.whatMaster());
+            public void onSuccess(CourseDetailDTO courseDetailDTO) {
+                courseTitle.setText(courseDetailDTO.name());
+                courseDetailsFormat.setText(courseDetailDTO.format());
+                courseDetailsPrice.setText(courseDetailDTO.price());
+                courseDetailsDuration.setText(courseDetailDTO.duration());
+                courseDetailsWhoWhom.setText(courseDetailDTO.whoWhom());
+                courseDetailsWhatMaster.setText(courseDetailDTO.whatMaster());
             }
 
             @Override

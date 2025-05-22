@@ -30,7 +30,6 @@ import org.hse.protim.clients.retrofit.profile.ProfileClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 
 public class EditProfilePage extends BaseActivity {
@@ -99,7 +97,7 @@ public class EditProfilePage extends BaseActivity {
 //        btnAddContact = findViewById(R.id.btn_add_contact);
 
         sectionContainer = findViewById(R.id.section_container);
-        softwareContainer = findViewById(R.id.software_container);
+        softwareContainer = findViewById(R.id.software_container_filer);
 
         selectedSections = new ArrayList<>();
         selectedSoftware = new ArrayList<>();

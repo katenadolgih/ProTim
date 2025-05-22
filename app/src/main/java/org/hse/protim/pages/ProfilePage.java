@@ -97,7 +97,9 @@ public class ProfilePage extends BaseActivity {
         profileClient.getProfilePreview(new ProfileClient.ProfilePreviewCallback() {
             @Override
             public void onSuccess(ProfilePreviewDTO previewDTO) {
-                specialistAge.setText(previewDTO.age().toString());
+                if (previewDTO.age() != null) {
+                    specialistAge.setText(previewDTO.age().toString());
+                }
                 specialistName.setText(previewDTO.fullName());
                 specialistCity.setText(previewDTO.city());
                 specialistStatus.setText(previewDTO.status());
@@ -151,7 +153,7 @@ public class ProfilePage extends BaseActivity {
                 View view = getLayoutInflater().inflate(R.layout.bottom_sheet_info, null);
 
                 FlexboxLayout sectionContainer = view.findViewById(R.id.section_container);
-                FlexboxLayout softwareContainer = view.findViewById(R.id.software_container);
+                FlexboxLayout softwareContainer = view.findViewById(R.id.software_container_filer);
 
                 addTags(sectionContainer, profileInfoDTO.sectionAndStamps().toArray(new String[0]));
                 addTags(softwareContainer, profileInfoDTO.softwareSkills().toArray(new String[0]));
