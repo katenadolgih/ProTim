@@ -2,9 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#FFFFFF">
-
-
+    android:background="@color/dot_inactive">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -160,11 +158,11 @@
             android:id="@+id/et_about"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="О себе">
+            android:layout_height="wrap_content">
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="100dp"/>
+                android:layout_height="wrap_content"
+                android:minHeight="100dp"/>
         </com.google.android.material.textfield.TextInputLayout>
         <Button
             android:id="@+id/save_button"

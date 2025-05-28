@@ -1,52 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/course_details_page"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/dot_inactive">
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dot_inactive"
-    android:id="@+id/course_details_page">
-
-    <!-- Кнопка назад -->
-    <ImageButton
-        android:id="@+id/button_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/go_back"
-        android:src="@drawable/ic_back"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"/>
+    android:paddingBottom="56dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/button_back"
-        android:paddingHorizontal="16dp">
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/courseTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@color/primary"
-        android:text="@string/CourseName"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"/>
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/go_back"
+            android:src="@drawable/ic_back"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/courseTitle"
-        android:layout_marginTop="16dp">
+        <TextView
+            android:id="@+id/courseTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/primary"
+            android:text="@string/CourseName"
+            android:textStyle="bold"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="16dp"/>
 
-        <!-- Первый блок -->
+        <!-- Информационные блоки -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/rounded_corners_project"
+                android:backgroundTint="@color/white"
+                android:padding="12dp">
             <TextView
                 android:id="@+id/block1Title"
                 android:layout_width="164dp"
@@ -71,7 +72,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:background="@drawable/rounded_corners_project"
+            android:backgroundTint="@color/white"
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/Price"
@@ -97,7 +100,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:background="@drawable/rounded_corners_project"
+            android:backgroundTint="@color/white"
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/Duration"
@@ -123,7 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:background="@drawable/rounded_corners_project"
+            android:backgroundTint="@color/white"
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/who_for"
@@ -141,7 +148,7 @@
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:textColor="@color/gray_text"
-                android:text="Описание блока 3"/>
+                android:text="Описание блока 4"/>
         </LinearLayout>
 
         <!-- Пятый блок -->
@@ -149,7 +156,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:background="@drawable/rounded_corners_project"
+            android:backgroundTint="@color/white"
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/Stack"
@@ -167,19 +176,19 @@
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:textColor="@color/gray_text"
-                android:text="Описание блока 3 jdjdjdjjdjdjdjdjj jdjdjjdjdjdjdjd djdjdjd"/>
+                android:text="Описание блока 5"/>
+        </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-    <!-- Кнопка записаться -->
-    <Button
-        android:id="@+id/enrollButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:text="@string/enrollCourse"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
-        style="@style/ButtonTextStyle"
-        android:layout_centerHorizontal="true"/>
-</RelativeLayout>
+</ScrollView>
+
+<Button
+    android:id="@+id/enrollButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginBottom="6dp"
+    android:text="@string/enrollCourse"
+    style="@style/ButtonTextStyle" />
+</FrameLayout>

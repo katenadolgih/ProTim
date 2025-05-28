@@ -31,28 +31,29 @@
             android:layout_height="wrap_content"
             android:padding="16dp">
 
-            <!-- avatarFrame -->
             <FrameLayout
                 android:id="@+id/avatarFrame"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_circle"
-                android:clipToOutline="true">
+                android:layout_marginBottom="16dp">
 
-                <ImageView
+                <!-- Круглый аватар -->
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/avatarImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_profile"/>
+                    android:src="@drawable/ic_profile"
+                    app:shapeAppearanceOverlay="@style/RoundedPhotoStyle"/>
 
-                <View
+                <com.google.android.material.imageview.ShapeableImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#80000000"/>
+                    android:scaleType="centerCrop"
+                    android:background="#80000000"
+                    app:shapeAppearanceOverlay="@style/RoundedPhotoStyle"/>
 
                 <ImageView
                     android:id="@+id/photoIcon"
@@ -61,7 +62,6 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_photo"/>
             </FrameLayout>
-
 
             <LinearLayout
                 android:orientation="vertical"
@@ -124,11 +124,11 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:endIconDrawable="@drawable/ic_calendar"
                     android:hint="Дата рождения">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:endIconDrawable="@drawable/ic_calendar"
                         app:endIconMode="custom"
                         android:inputType="textEmailAddress"/>
                 </com.google.android.material.textfield.TextInputLayout>
@@ -159,17 +159,18 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginTop="8dp">
-                    <CheckBox
+                    <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_job_search"
-                        android:button="@drawable/selector_toggle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/selector_toggle"
+                        android:drawablePadding="8dp"
+                        android:button="@null"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ищу работу"
-                        android:textSize="16sp"
-                        android:layout_marginStart="8dp"/>
+                        android:text="@string/Searching_job"
+                        android:textSize="16sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -177,24 +178,25 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
-                    <CheckBox
+                    <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_internship"
-                        android:button="@drawable/selector_toggle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/selector_toggle"
+                        android:drawablePadding="8dp"
+                        android:button="@null"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ищу стажировку"
-                        android:textSize="16sp"
-                        android:layout_marginStart="8dp"/>
+                        android:text="@string/Searching_internal"
+                        android:textSize="16sp"/>
                 </LinearLayout>
 
                 <!-- === Конфиденциальность === -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Конфиденциальность"
+                    android:text="@string/Confidentiality"
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:layout_marginTop="16dp"/>
@@ -205,17 +207,19 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginTop="8dp">
-                    <CheckBox
+                    <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_hide_birthdate"
-                        android:button="@drawable/selector_toggle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/selector_toggle"
+                        android:drawablePadding="8dp"
+                        android:button="@null"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Скрыть дату рождения"
-                        android:textSize="16sp"
-                        android:layout_marginStart="8dp"/>
+                        android:text="@string/Hide_birthday"
+                        android:textSize="16sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -223,17 +227,18 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
-                    <CheckBox
+                    <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/checkbox_public_profile"
-                        android:button="@drawable/selector_toggle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/selector_toggle"
+                        android:drawablePadding="8dp"
+                        android:button="@null"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Публичный профиль"
-                        android:textSize="16sp"
-                        android:layout_marginStart="8dp"/>
+                        android:text="@string/Public_profile"
+                        android:textSize="16sp"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -248,5 +253,4 @@
                 style="@style/ButtonTextStyle"/>
         </LinearLayout>
     </ScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="16dp"
     android:fillViewport="true">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/space">
         <RelativeLayout
             android:id="@+id/profile_card"
             android:layout_width="match_parent"
@@ -20,7 +20,7 @@
                 android:id="@+id/specialist_photo"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
-                android:src="@drawable/ic_profile"
+                android:src="@drawable/ic_user"
                 android:scaleType="centerCrop"
                 android:layout_centerHorizontal="true"
                 app:shapeAppearanceOverlay="@style/RoundedPhotoStyle" />
@@ -29,6 +29,7 @@
                 android:id="@+id/more_options"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_marginEnd="36dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/ic_more"
@@ -120,6 +121,7 @@
             android:id="@+id/recycler_projects"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="16dp"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

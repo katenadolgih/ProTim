@@ -1,19 +1,17 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:id="@+id/password_change_page"
-    tools:context="pages.PasswordChangePage">
+    tools:context=".pages.SelectionCreatingPage">
 
-    <!-- TopAppBar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:background="@color/white"
+        android:background="@color/dot_inactive"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         app:contentInsetStart="0dp"
@@ -34,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/PasswordChange" />
+            android:text="@string/SelectionCreating" />
     </androidx.appcompat.widget.Toolbar>
     <ScrollView
         android:layout_width="0dp"
@@ -46,58 +44,58 @@
         app:layout_constraintWidth_max="390dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
-
-        <!-- Authorization Block -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text_change_password"
-                style="ChangePasswordText"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/quarter_space">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/Email"
+                    android:hint="@string/SelectionName"
                     android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Кнопка -->
-            <Button
-                android:id="@+id/sendButton"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputDescription"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/buttonSend"
-                android:layout_marginTop="12dp"
-                style="@style/ButtonTextStyle"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/cancelButton"
-                style="@style/ButtonTextStyleBlue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
-                android:text="@string/buttonCancel" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/SelectionDescription"
+                    android:inputType="textEmailAddress"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-
-        </LinearLayout>
+         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/button_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/buttonCreate"
+        android:layout_marginBottom="@dimen/half_space"
+        style="@style/ButtonTextStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="@dimen/space"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

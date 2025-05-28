@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import org.hse.protim.R;
@@ -44,6 +46,7 @@ public class HomePage extends BaseActivity {
     private TextView seeAllPopularProjects;
 
     private ImageView notificationIcon;
+    private ImageView buttonFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class HomePage extends BaseActivity {
         seeAllPopularProjects = findViewById(R.id.seeAllPopularProjects);
 
         notificationIcon = findViewById(R.id.notificationIcon);
+
     }
 
     private void handle() {
@@ -222,10 +226,15 @@ public class HomePage extends BaseActivity {
         });
 
         ImageButton favoriteButton1 = project1.findViewById(R.id.favoriteButton);
-        favoriteButton1.setOnClickListener(v -> {
-            boolean selected = favoriteButton1.isSelected();
-            favoriteButton1.setSelected(!selected);
-        });
+        if (favoriteButton1 != null) {
+            favoriteButton1.setOnClickListener(v -> {
+                boolean selected = favoriteButton1.isSelected();
+                favoriteButton1.setSelected(!selected);
+                showFavoritePopup();
+                showSelectionPopup();
+
+            });
+        }
 
 
         // --- Популярные проекты ---

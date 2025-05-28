@@ -10,7 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +23,8 @@ import org.hse.protim.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesPage extends BaseActivity {
-
+public class SelectionPage extends BaseActivity {
+    
     private ImageButton addSelection;
     private TextView seeAllSelections;
     private LinearLayout selectionLayout;
@@ -30,11 +34,11 @@ public class FavoritesPage extends BaseActivity {
     private TextView titleView;
     private ImageButton buttonBack;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorites_page);
+        setContentView(R.layout.activity_selection_page);
+
 
         init();
         handle();
@@ -44,27 +48,27 @@ public class FavoritesPage extends BaseActivity {
         titleView.setText(R.string.favorites);
 
 
-        RecyclerView recyclerPopularProjects = findViewById(R.id.popularProjectsRecycler);
-        recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerFavoriteProjects = findViewById(R.id.favoriteProjectsRecycler);
+        recyclerFavoriteProjects.setLayoutManager(new LinearLayoutManager(this));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         List<View> projectViews = new ArrayList<>();
 
-        View project1 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
+        View project1 = inflater.inflate(R.layout.item_project, recyclerFavoriteProjects, false);
         ((ImageView) project1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
         ((TextView) project1.findViewById(R.id.projectDescription)).setText("Популярный проект A — исследование ИИ");
         ((TextView) project1.findViewById(R.id.projectHashtags)).setText("#AI #Research #Tech");
         ((TextView) project1.findViewById(R.id.projectAuthor)).setText("Смирнов Алексей");
         ((TextView) project1.findViewById(R.id.likesCount)).setText("105");
 
-        View project2 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
+        View project2 = inflater.inflate(R.layout.item_project, recyclerFavoriteProjects, false);
         ((ImageView) project2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
         ((TextView) project2.findViewById(R.id.projectDescription)).setText("Популярный проект B — мобильное приложение для экологии");
         ((TextView) project2.findViewById(R.id.projectHashtags)).setText("#Eco #Mobile #UX");
         ((TextView) project2.findViewById(R.id.projectAuthor)).setText("Кузнецова Ирина");
         ((TextView) project2.findViewById(R.id.likesCount)).setText("321");
 
-        View project3 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
+        View project3 = inflater.inflate(R.layout.item_project, recyclerFavoriteProjects, false);
         ((ImageView) project3.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
         ((TextView) project3.findViewById(R.id.projectDescription)).setText("Популярный проект C — цифровая платформа образования");
         ((TextView) project3.findViewById(R.id.projectHashtags)).setText("#EdTech #Platform #Java");
@@ -75,7 +79,7 @@ public class FavoritesPage extends BaseActivity {
         projectViews.add(project2);
         projectViews.add(project3);
 
-        recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        recyclerFavoriteProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
@@ -94,6 +98,7 @@ public class FavoritesPage extends BaseActivity {
                 return position;
             }
         });
+
     }
 
     private void init() {
@@ -107,22 +112,16 @@ public class FavoritesPage extends BaseActivity {
     }
 
     private void handle() {
-//        findViewById(R.id.toolbar).findViewById(R.id.button_back).setOnClickListener(v -> onBackPressed());
         buttonBack.setVisibility(View.GONE);
         addSelection.setOnClickListener(v -> {
-            Intent intent = new Intent(FavoritesPage.this, SelectionCreatingPage.class);
+            Intent intent = new Intent(SelectionPage.this, SelectionEditingPage.class);
             startActivity(intent);
         });
 
         seeAllSelections.setOnClickListener(v -> {
-            Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
+            Intent intent = new Intent(SelectionPage.this, SelectionsAllPage.class);
             startActivity(intent);
         });
-        seeAllSelections.setOnClickListener(v -> {
-            Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
-            startActivity(intent);
-        });
-
     }
 
     private void loadSampleData() {
@@ -139,4 +138,5 @@ public class FavoritesPage extends BaseActivity {
         selectionsRecycler.setAdapter(new SelectionAdapter(selections, false));
 
     }
+
 }

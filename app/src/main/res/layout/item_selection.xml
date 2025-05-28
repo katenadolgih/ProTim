@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="152dp"
+    android:layout_margin="@dimen/half_space"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="@dimen/space">
+
+        <RelativeLayout
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:maxWidth="120dp"
+            android:background="@drawable/rounded_corners_project">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/projectImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:maxWidth="350dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_building"
+                android:contentDescription="@string/project_image"
+                app:shapeAppearanceOverlay="@style/RoundedImageStyle"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/quarter_space"
+            android:layout_marginStart="@dimen/half_space"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/selectionName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/half_space"
+                android:layout_marginBottom="@dimen/quarter_space"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Название подборки"/>
+
+            <TextView
+                android:id="@+id/selectionDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/half_space"
+                android:textColor="@color/gray_date_text"
+                android:textSize="14sp"
+                android:maxLines="4"
+                android:ellipsize="end"
+                tools:text="Описание подборки с кратким изложением сути и целей разработки, соответствующего стандартам "/>
+
+        </LinearLayout>
+        </LinearLayout>
+</androidx.cardview.widget.CardView>

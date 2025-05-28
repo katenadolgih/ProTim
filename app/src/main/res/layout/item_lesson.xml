@@ -39,16 +39,16 @@
             android:textSize="14sp"/>
 
         <!-- Аватар преподавателя -->
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/teacherAvatar"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_below="@id/lessonNumberAndTitle"
             android:layout_marginTop="8dp"
+            android:layout_below="@id/lessonNumberAndTitle"
             android:src="@drawable/ic_profile"
             android:scaleType="centerCrop"
-            android:background="@drawable/bg_circle"
-            android:layout_alignParentStart="true" />
+            android:layout_gravity="center_horizontal"
+            app:shapeAppearanceOverlay="@style/RoundedPhotoStyle"/>
 
         <!-- Имя преподавателя -->
         <TextView
