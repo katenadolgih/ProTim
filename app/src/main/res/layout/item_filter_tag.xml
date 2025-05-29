@@ -13,10 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="AutoCad"
-        android:textSize="12sp"
+        android:paddingEnd="8dp"
         android:textColor="@color/active_field"
-        android:paddingEnd="8dp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:id="@+id/tag_close"

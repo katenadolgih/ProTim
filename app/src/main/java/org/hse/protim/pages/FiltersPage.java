@@ -16,6 +16,7 @@ import org.hse.protim.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FiltersPage extends BaseActivity {
 
@@ -58,13 +59,29 @@ public class FiltersPage extends BaseActivity {
 
         int finalBeforePage = beforePage;
         applyButton.setOnClickListener(v -> {
-            Intent intent = new Intent(FiltersPage.this, SearchPage.class);
-            intent.putStringArrayListExtra("selected_sections", selectedSections);
-            intent.putStringArrayListExtra("selected_software", selectedSoftware);
-            intent.putExtra("searchInput", getIntent().getStringExtra("searchInput"));
-            intent.putExtra("start_page", startPage);
-            intent.putExtra("before_page", finalBeforePage);
-            startActivity(intent);
+            if (lastHighlightIcon == R.id.icon_home) {
+                if (Objects.equals(getIntent().getStringExtra("page"), "new_projects")) {
+                    Intent intent = new Intent(FiltersPage.this, NewProjectsPage.class);
+                    intent.putStringArrayListExtra("selected_sections", selectedSections);
+                    intent.putExtra("searchInput", getIntent().getStringExtra("searchInput"));
+                    intent.putStringArrayListExtra("selected_software", selectedSoftware);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(FiltersPage.this, PopularProjectsPage.class);
+                    intent.putStringArrayListExtra("selected_sections", selectedSections);
+                    intent.putExtra("searchInput", getIntent().getStringExtra("searchInput"));
+                    intent.putStringArrayListExtra("selected_software", selectedSoftware);
+                    startActivity(intent);
+                }
+            } else {
+                Intent intent = new Intent(FiltersPage.this, SearchPage.class);
+                intent.putStringArrayListExtra("selected_sections", selectedSections);
+                intent.putStringArrayListExtra("selected_software", selectedSoftware);
+                intent.putExtra("searchInput", getIntent().getStringExtra("searchInput"));
+                intent.putExtra("start_page", startPage);
+                intent.putExtra("before_page", finalBeforePage);
+                startActivity(intent);
+            }
         });
 
         titleView.setText(R.string.filters_page_title);

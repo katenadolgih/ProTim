@@ -34,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="83dp"
             android:layout_marginTop="8dp"
-            android:text="Курс по мобильной разработке"
             android:textColor="@color/light_black"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -45,7 +44,6 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginTop="4dp"
-            android:text="Старт: 15 апреля – 15 мая"
             android:textColor="@color/button_color"
             android:textSize="10sp" />
 
@@ -55,7 +53,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="От 2 900 ₽"
             android:textColor="@color/light_black"
             android:textSize="16sp"
             android:textStyle="bold" />

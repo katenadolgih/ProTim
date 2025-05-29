@@ -17,7 +17,7 @@ public class SplashActivity extends AppCompatActivity {
 
         TokenStorage tokenStorage = new TokenStorage(this);
         if (tokenStorage.getAccessToken() == null) {
-            goToLogin();
+            goToMain();
             return;
         }
 
@@ -30,19 +30,19 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onUnauthorized() {
-                goToLogin();
+                goToMain();
             }
 
             @Override
             public void onError(String message) {
                 Toast.makeText(SplashActivity.this, message, Toast.LENGTH_SHORT).show();
-                goToLogin();
+                goToMain();
             }
         });
     }
 
-    private void goToLogin() {
-        startActivity(new Intent(SplashActivity.this, LoginPage.class));
+    private void goToMain() {
+        startActivity(new Intent(SplashActivity.this, MainActivity.class));
         finish();
     }
 }

@@ -42,15 +42,15 @@
         android:layout_gravity="center"
             android:layout_marginTop="6dp"
         android:orientation="horizontal">
-        <TextView
-            android:id="@+id/specialist_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Михалева Софья"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:textStyle="bold"
-            android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/specialist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/button_info"
@@ -66,55 +66,55 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="6dp"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/specialist_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20"
-                android:textSize="10sp"
-                android:paddingEnd="2dp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/gray_search_text"/>
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingEnd="2dp"
+                android:textColor="@color/gray_search_text"
+                android:textSize="10sp" />
+
             <TextView
                 android:id="@+id/specialist_age_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="лет"
-                android:textSize="10sp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/gray_search_text"/>
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/gray_search_text"
+                android:textSize="10sp" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="4dp"
                 android:paddingStart="8dp"
                 android:src="@drawable/ic_geo"/>
+
             <TextView
                 android:id="@+id/specialist_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Пермь"
-                android:textSize="10sp"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/gray_search_text"/>
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/gray_search_text"
+                android:textSize="10sp" />
         </LinearLayout>
+
         <TextView
             android:id="@+id/specialist_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ищу стажировку"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/tag_shape"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:textSize="8sp"
             android:textColor="@color/active_field"
-            android:background="@drawable/tag_shape"
-            android:layout_gravity="center_horizontal"/>
+            android:textSize="8sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_projects"

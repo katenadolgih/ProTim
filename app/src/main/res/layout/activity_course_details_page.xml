@@ -66,7 +66,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Описание блока 1"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -92,7 +91,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Описание блока 2"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -118,7 +116,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Описание блока 3"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -144,7 +141,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Кому подходит"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -170,7 +166,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Описание технологий"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp" />
             </LinearLayout>

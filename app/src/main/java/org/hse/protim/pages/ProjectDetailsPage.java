@@ -40,6 +40,7 @@ public class ProjectDetailsPage extends AppCompatActivity {
     private RetrofitProvider retrofitProvider;
     private List<ProjectContentDTO> projectContentDTOS;
     private TextView titleText;
+    private ImageButton buttonBack;
 //    private TextView projectNameText;
 
     @Override
@@ -50,6 +51,7 @@ public class ProjectDetailsPage extends AppCompatActivity {
         init();
         authorHandle();
         shareHandle();
+        buttonBackHandle();
 
         loadAndDisplayProjectContents();
     }
@@ -72,6 +74,8 @@ public class ProjectDetailsPage extends AppCompatActivity {
         titleText = findViewById(R.id.title_text);
         titleText.setText("Проект");
 
+        buttonBack = findViewById(R.id.button_back);
+
 //        projectNameText = findViewById(R.id.project_name_text);
 //        projectNameText.setText(projectName);
     }
@@ -90,6 +94,15 @@ public class ProjectDetailsPage extends AppCompatActivity {
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_TEXT, "Смотри проект в приложении Протим!");
             startActivity(Intent.createChooser(intent, "Поделиться проектом"));
+        });
+    }
+
+    private void buttonBackHandle() {
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
         });
     }
 

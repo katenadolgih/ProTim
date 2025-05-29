@@ -172,6 +172,8 @@ public class ProgramPage extends BaseActivity {
             holder.titleAndNumber.setText(lesson.name());
             holder.teacher.setText(lesson.authorName());
 
+            teacherTextHandle(holder.teacher, lessonId);
+
             Glide.with(holder.teacherAvatar.getContext()).clear(holder.teacherAvatar);
             Glide.with(holder.teacherAvatar.getContext())
                     .load(lesson.authorPhotoPath())
@@ -198,6 +200,16 @@ public class ProgramPage extends BaseActivity {
                                         .show());
                     }
                 });
+            });
+        }
+
+        private void teacherTextHandle(TextView teacher, Long lessonId) {
+            teacher.setOnClickListener(v -> {
+                Context context = v.getContext();
+                Intent intent = new Intent(v.getContext(), ProfilePage.class);
+                intent.putExtra("fromPage", "lesson");
+                intent.putExtra("lessonId", lessonId);
+                context.startActivity(intent);
             });
         }
 

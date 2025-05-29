@@ -18,8 +18,11 @@ public class ProjectClient {
         this.projectApi = retrofitProvider.getAuthorizedRetrofit().create(ProjectApi.class);
     }
 
-    public void getProjects(String filter, Integer count, ProjectCallback callback) {
-        projectApi.getNewProjects(filter, count).enqueue(new Callback<>() {
+    public void getProjects(String filter, Integer count, String name,
+                            List<String> sectionAndStamp,
+                            List<String> softwareSkill,
+                            ProjectCallback callback) {
+        projectApi.getNewProjects(filter, count, name, sectionAndStamp, softwareSkill).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -147,6 +150,48 @@ public class ProjectClient {
 
     public void getAuthorProjects(ProjectCallback callback) {
         projectApi.getAuthorProjects().enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProjectDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getAuthorProjectsByProject(Long projectId, ProjectCallback callback) {
+        projectApi.getAuthorProjectsByProject(projectId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProjectDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getAuthorProjectsByUser(Long userId, ProjectCallback callback) {
+        projectApi.getAuthorProjectsByUser(userId).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
+                callback.onSuccess(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProjectDTO>> call, Throwable throwable) {
+                callback.onError(throwable.getMessage());
+            }
+        });
+    }
+
+    public void getAuthorProjectsByLesson(Long lessonId, ProjectCallback callback) {
+        projectApi.getAuthorProjectsByLesson(lessonId).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ProjectDTO>> call, Response<List<ProjectDTO>> response) {
                 callback.onSuccess(response.body());

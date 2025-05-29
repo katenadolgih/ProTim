@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -360,6 +361,7 @@ public class SearchPage extends BaseActivity {
             ImageButton favoriteButton, likeButton;
             TextView projectDescription, projectHashtags, projectAuthor, likesCount;
 
+
             public ViewHolder(View itemView) {
                 super(itemView);
                 projectImage = itemView.findViewById(R.id.projectImage);
@@ -394,6 +396,14 @@ public class SearchPage extends BaseActivity {
             holder.projectHashtags.setText(String.join(" ", p.tags()));
             holder.projectAuthor.setText(p.fullName());
             holder.likesCount.setText(String.valueOf(p.likesCount()));
+
+            holder.projectAuthor.setOnClickListener(v -> {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, ProfilePage.class);
+                intent.putExtra("fromPage", "project");
+                intent.putExtra("projectId", projectId);
+                context.startActivity(intent);
+            });
 
             projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
                 @Override
@@ -462,6 +472,13 @@ public class SearchPage extends BaseActivity {
                 });
             });
 
+            holder.likesCount.setOnClickListener(v -> {
+                Context currContext = v.getContext();
+                Intent intent = new Intent(currContext, RatedPage.class);
+                intent.putExtra("PROJECT_ID", projectId);
+                currContext.startActivity(intent);
+            });
+
 //            holder.projectAuthor.setOnClickListener(v -> {
 //                Toast.makeText(v.getContext(), "Автор: " + p.author, Toast.LENGTH_SHORT).show();
 //            });
@@ -519,6 +536,7 @@ public class SearchPage extends BaseActivity {
                     .error(R.drawable.ic_profile)
                     .into(h.photo);
 
+            specialistClickHandle(h.itemView, s.id());
 
 
             h.status.setText(s.status());
@@ -530,6 +548,16 @@ public class SearchPage extends BaseActivity {
         public int getItemCount() {
             return list.size();
         }
+    }
+
+    private static void specialistClickHandle(View specialistItem, Long specialistId) {
+        specialistItem.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, ProfilePage.class);
+            intent.putExtra("fromPage", "specialist");
+            intent.putExtra("userId", specialistId);
+            context.startActivity(intent);
+        });
     }
 
     public static class CompaniesAdapter extends RecyclerView.Adapter<CompaniesAdapter.ViewHolder> {

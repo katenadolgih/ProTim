@@ -16,7 +16,10 @@ public interface ProjectApi {
     @GET("projects")
     Call<List<ProjectDTO>> getNewProjects(
             @Query("filter") String filter,
-            @Query("count") Integer count
+            @Query("count") Integer count,
+            @Query("name") String name,
+            @Query("sectionAndStamp") List<String> sectionAndStamp,
+            @Query("softwareSkill") List<String> softwareSkill
     );
 
     @GET("projects/is-like/{projectId}")
@@ -52,4 +55,16 @@ public interface ProjectApi {
     @GET("projects/author-projects")
     Call<List<ProjectDTO>> getAuthorProjects(
     );
+
+    @GET("projects/author-projects/project/{projectId}")
+    Call<List<ProjectDTO>> getAuthorProjectsByProject(
+            @Path("projectId") Long projectId);
+
+    @GET("projects/author-projects/user/{userId}")
+    Call<List<ProjectDTO>> getAuthorProjectsByUser(
+            @Path("userId") Long userId);
+
+    @GET("projects/author-projects/lesson/{lessonId}")
+    Call<List<ProjectDTO>> getAuthorProjectsByLesson(
+            @Path("lessonId") Long lessonId);
 }

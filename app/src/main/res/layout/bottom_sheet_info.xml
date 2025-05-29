@@ -61,11 +61,10 @@
             android:id="@+id/resume_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Resume_Serge.pdf"
-            android:textColor="@color/active_field"
             android:drawableStart="@drawable/ic_pdf"
             android:drawablePadding="8dp"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textColor="@color/active_field" />
 
         <!-- Образование -->
         <TextView
@@ -80,11 +79,10 @@
             android:id="@+id/education"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Пермский Политехнический Колледж имени..."
             android:ellipsize="end"
             android:maxLines="2"
-            android:textSize="14sp"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textSize="14sp" />
 
         <!-- Дипломная работа -->
         <TextView
@@ -99,11 +97,10 @@
             android:id="@+id/diploma_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Diploma.zip"
-            android:textColor="@color/active_field"
             android:drawableStart="@drawable/ic_pdf"
             android:drawablePadding="8dp"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textColor="@color/active_field" />
 
         <!-- Социальные сети -->
         <TextView
@@ -118,10 +115,9 @@
             android:id="@+id/vk_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="https://vk/sergeyakk.ru"
-            android:textColor="@color/active_field"
             android:autoLink="web"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textColor="@color/active_field" />
 
         <!-- Telegram -->
         <TextView
@@ -136,10 +132,9 @@
             android:id="@+id/telegram_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="https://t.me/ivan123"
-            android:textColor="@color/active_field"
             android:autoLink="web"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textColor="@color/active_field" />
 
         <!-- О себе -->
         <TextView
@@ -154,8 +149,7 @@
             android:id="@+id/about_me"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Информация этого блока поможет работодателю принять правильное решение..."
-            android:textSize="14sp"
-            android:paddingTop="4dp"/>
+            android:paddingTop="4dp"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>

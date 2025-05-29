@@ -10,25 +10,23 @@
         android:id="@+id/userPhoto"
         android:layout_width="38dp"
         android:layout_height="38dp"
-        android:src="@drawable/ic_user"
-        android:scaleType="centerCrop"
         android:background="@drawable/photo_shape"
         android:clipToOutline="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/nav_profile_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
         android:paddingHorizontal="10dp"
-        android:text="Фамилия Имя"
+        android:paddingVertical="10dp"
         android:textColor="@color/active_field"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/userPhoto"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.065" />
+        app:layout_constraintStart_toEndOf="@id/userPhoto"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

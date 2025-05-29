@@ -21,24 +21,22 @@
         android:id="@+id/specialist_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ищу работу"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/tag_shape"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:textSize="8sp"
         android:textColor="@color/active_field"
-        android:background="@drawable/tag_shape"
-        android:layout_gravity="center_horizontal"/>
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/specialist_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Михалева Софья"
-        android:maxLines="1"
+        android:layout_marginVertical="6dp"
         android:ellipsize="end"
-        android:textStyle="bold"
+        android:maxLines="1"
         android:textSize="14sp"
-        android:layout_marginVertical="6dp"/>
+        android:textStyle="bold" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,16 +46,16 @@
             android:layout_height="wrap_content"
             android:paddingEnd="4dp"
             android:src="@drawable/ic_geo"/>
-    <TextView
-        android:id="@+id/specialist_city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Пермь"
-        android:textSize="10sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/gray_search_text"/>
+
+        <TextView
+            android:id="@+id/specialist_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/gray_search_text"
+            android:textSize="10sp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
@@ -68,15 +66,15 @@
             android:layout_height="wrap_content"
             android:paddingEnd="4dp"
             android:src="@drawable/ic_university"/>
-    <TextView
-        android:id="@+id/specialist_university"
-        android:layout_width="wrap_content"
-        android:layout_height="29dp"
-        android:text="Пермский национальный исследовательский университет"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:textSize="10sp"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/gray_search_text"/>
+
+        <TextView
+            android:id="@+id/specialist_university"
+            android:layout_width="wrap_content"
+            android:layout_height="29dp"
+            android:layout_gravity="center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/gray_search_text"
+            android:textSize="10sp" />
     </LinearLayout>
 </LinearLayout>

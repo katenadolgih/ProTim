@@ -40,14 +40,9 @@ public class HomePage extends BaseActivity {
     private ViewPager2 viewPagerSlider;
     private Handler sliderHandler = new Handler();
     private Runnable sliderRunnable;
-
     private DotsIndicator dotsIndicator;
-    private int dotsCount;
-    private ImageView[] dots;
-
     private RecyclerView recyclerCourses;
     private TextView seeAllCourses;
-
     private RecyclerView recyclerProjects;
     private TextView seeAllProjects;
 
@@ -164,7 +159,8 @@ public class HomePage extends BaseActivity {
     }
 
     private void setPopularProjects(LayoutInflater inflater) {
-        projectClient.getProjects("popularity", 3, new ProjectClient.ProjectCallback() {
+        projectClient.getProjects("popularity", 3, null, null, null,
+                new ProjectClient.ProjectCallback() {
             @Override
             public void onSuccess(List<ProjectDTO> projects) {
                 recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(HomePage.this, LinearLayoutManager.VERTICAL, false));
@@ -176,13 +172,15 @@ public class HomePage extends BaseActivity {
                     ((TextView) projectView.findViewById(R.id.projectDescription)).setText(project.name());
                     ((TextView) projectView.findViewById(R.id.projectHashtags)).setText(project.tags().stream().map(tag -> "#" + tag)
                             .collect(Collectors.joining("  ")));
-                    ((TextView) projectView.findViewById(R.id.projectAuthor)).setText(project.fullName());
+                    TextView projectAuthor = projectView.findViewById(R.id.projectAuthor);
+                    projectAuthor.setText(project.fullName());
                     ((TextView) projectView.findViewById(R.id.likesCount)).setText(project.likesCount().toString());
 
                     ImageView imageView = projectView.findViewById(R.id.projectImage);
                     Glide.with(HomePage.this)
                             .load(project.photoPath())
                             .into(imageView);
+
 
                     ImageButton favoriteButton = projectView.findViewById(R.id.favoriteButton);
                     TextView likesText = projectView.findViewById(R.id.likesCount);
@@ -198,15 +196,20 @@ public class HomePage extends BaseActivity {
 
                     likeButtonHandler(project.projectId(), likeButton, likesText);
                     favouritesHandler(projectId, favoriteButton);
+                    projectAuthorHandler(projectId, projectAuthor);
 
                     popularProjectViews.add(projectView);
+
                 }
 
                 recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         return new RecyclerView.ViewHolder(popularProjectViews.get(viewType)) {};
                     }
-                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                        ProjectDTO p = projects.get(position);
+                        holder.itemView.setOnClickListener(v -> projectClickHandle(p));
+                    }
                     @Override public int getItemCount() { return popularProjectViews.size(); }
                     @Override public int getItemViewType(int position) { return position; }
                 });
@@ -219,8 +222,26 @@ public class HomePage extends BaseActivity {
         });
     }
 
+    private void projectAuthorHandler(Long projectId, TextView projectAuthor) {
+        projectAuthor.setOnClickListener(v -> {
+            Intent intent = new Intent(HomePage.this, ProfilePage.class);
+            intent.putExtra("projectId", projectId);
+            intent.putExtra("fromPage", "project");
+            startActivity(intent);
+        });
+    }
+
+    private void projectClickHandle(ProjectDTO p) {
+        Intent intent = new Intent(HomePage.this, ProjectDetailsPage.class);
+        intent.putExtra("project_id", p.projectId());
+        intent.putExtra("project_name", p.name());
+        intent.putExtra("author", p.fullName());
+        startActivity(intent);
+    }
+
     private void setNewProjects(LayoutInflater inflater) {
-        projectClient.getProjects("new", 3, new ProjectClient.ProjectCallback() {
+        projectClient.getProjects("new", 3, null, null, null,
+                new ProjectClient.ProjectCallback() {
             @Override
             public void onSuccess(List<ProjectDTO> projects) {
                 recyclerProjects.setLayoutManager(new LinearLayoutManager(HomePage.this));
@@ -232,7 +253,8 @@ public class HomePage extends BaseActivity {
                     ((TextView) projectView.findViewById(R.id.projectDescription)).setText(project.name());
                     ((TextView) projectView.findViewById(R.id.projectHashtags)).setText(project.tags().stream().map(tag -> "#" + tag)
                             .collect(Collectors.joining("  ")));
-                    ((TextView) projectView.findViewById(R.id.projectAuthor)).setText(project.fullName());
+                    TextView projectAuthor = projectView.findViewById(R.id.projectAuthor);
+                    projectAuthor.setText(project.fullName());
                     ((TextView) projectView.findViewById(R.id.likesCount)).setText(project.likesCount().toString());
 
                     ImageView imageView = projectView.findViewById(R.id.projectImage);
@@ -254,6 +276,7 @@ public class HomePage extends BaseActivity {
 
                     likeButtonHandler(projectId, likeButton, likesText);
                     favouritesHandler(projectId, favoriteButton);
+                    projectAuthorHandler(projectId, projectAuthor);
 
                     projectViews.add(projectView);
                 }
@@ -262,7 +285,10 @@ public class HomePage extends BaseActivity {
                     @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                         return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
                     }
-                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                        ProjectDTO p = projects.get(position);
+                        holder.itemView.setOnClickListener(v -> projectClickHandle(p));
+                    }
                     @Override public int getItemCount() { return projectViews.size(); }
                     @Override public int getItemViewType(int position) { return position; }
                 });

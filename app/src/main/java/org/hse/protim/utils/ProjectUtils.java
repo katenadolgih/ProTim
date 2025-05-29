@@ -20,7 +20,11 @@ import com.bumptech.glide.Glide;
 import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.projects.ProjectClient;
+import org.hse.protim.pages.HomePage;
+import org.hse.protim.pages.NewProjectsPage;
 import org.hse.protim.pages.PopularProjectsPage;
+import org.hse.protim.pages.ProfilePage;
+import org.hse.protim.pages.ProjectDetailsPage;
 import org.hse.protim.pages.RatedPage;
 
 import java.util.ArrayList;
@@ -28,9 +32,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProjectUtils {
-    public void setNewProjects(LayoutInflater inflater, Context context, String filter, ProjectClient projectClient,
+    public void setNewProjects(LayoutInflater inflater, Context context, String filter,
+                               String name,
+                               List<String> sectionAndStamp,
+                               List<String> softwareSkill,
+                               ProjectClient projectClient,
                                 RecyclerView recyclerPopularProjects) {
-        projectClient.getProjects(filter, null, new ProjectClient.ProjectCallback() {
+        projectClient.getProjects(filter, null, name, sectionAndStamp, softwareSkill,
+                new ProjectClient.ProjectCallback() {
             @Override
             public void onSuccess(List<ProjectDTO> projects) {
                 recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(context));
@@ -44,6 +53,7 @@ public class ProjectUtils {
                             .collect(Collectors.joining("  ")));
                     ((TextView) projectView.findViewById(R.id.projectAuthor)).setText(project.fullName());
                     ((TextView) projectView.findViewById(R.id.likesCount)).setText(project.likesCount().toString());
+                    TextView projectAuthor = projectView.findViewById(R.id.projectAuthor);
 
                     ImageView imageView = projectView.findViewById(R.id.projectImage);
                     Glide.with(context)
@@ -58,17 +68,40 @@ public class ProjectUtils {
 
                     likeButtonHandler(projectId, likeButton, likesText, projectClient, context);
                     favouritesHandler(projectId, favoriteButton, projectClient, context);
+                    projectAuthorHandler(projectId, projectAuthor);
 
                     projectViews.add(projectView);
                 }
 
-                recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
+                recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<>() {
+                    @Override
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        return new RecyclerView.ViewHolder(projectViews.get(viewType)) {
+                        };
                     }
-                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-                    @Override public int getItemCount() { return projectViews.size(); }
-                    @Override public int getItemViewType(int position) { return position; }
+
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                        ProjectDTO p = projects.get(position);
+                        holder.itemView.setOnClickListener(v -> {
+                            Context currContext = holder.itemView.getContext();
+                            Intent intent = new Intent(currContext, ProjectDetailsPage.class);
+                            intent.putExtra("project_id", p.projectId());
+                            intent.putExtra("project_name", p.name());
+                            intent.putExtra("author", p.fullName());
+                            currContext.startActivity(intent);
+                        });
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return projectViews.size();
+                    }
+
+                    @Override
+                    public int getItemViewType(int position) {
+                        return position;
+                    }
                 });
             }
 
@@ -76,6 +109,16 @@ public class ProjectUtils {
             public void onError(String message) {
                 Toast.makeText(context, message, Toast.LENGTH_LONG).show();
             }
+        });
+    }
+
+    private void projectAuthorHandler(Long projectId, TextView projectAuthor) {
+        projectAuthor.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, ProfilePage.class);
+            intent.putExtra("projectId", projectId);
+            intent.putExtra("fromPage", "project");
+            context.startActivity(intent);
         });
     }
 
@@ -120,6 +163,7 @@ public class ProjectUtils {
 
         likesText.setOnClickListener(v -> {
             Intent intent = new Intent(context, RatedPage.class);
+            intent.putExtra("PROJECT_ID", projectId);
             context.startActivity(intent);
         });
     }

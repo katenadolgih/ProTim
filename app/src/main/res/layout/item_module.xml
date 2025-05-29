@@ -10,10 +10,9 @@
         android:id="@+id/moduleTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Модуль 4. Проектирование «Дома мечты» с использованием ТИМ."
-        android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:textSize="16sp"
-        android:textColor="@android:color/black" />
+        android:textStyle="bold" />
 
     <!-- Номер и название подмодуля -->
     <TextView

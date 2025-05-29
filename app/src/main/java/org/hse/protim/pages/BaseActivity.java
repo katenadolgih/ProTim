@@ -18,6 +18,7 @@ import org.hse.protim.R;
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected LinearLayout navHome, navSearch, navCourses, navFavorites, navProfile;
+    protected static int lastHighlightIcon, lastHighlightText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +52,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void navigateTo(Class<?> activityClass) {
+        Intent intent = new Intent(this, activityClass);
+        intent.putExtra("fromPage", "");
+        // Там ещё клир таск было
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
         if (!this.getClass().equals(activityClass)) {
-            Intent intent = new Intent(this, activityClass);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            overridePendingTransition(0, 0);
             finish();
         }
     }
 
     protected void highlightCurrentTab() {
-        resetTabStyles();
+        if (!(this instanceof FiltersPage)) {
+            resetTabStyles();
+        } else {
+            highlightTab(lastHighlightIcon, lastHighlightText);
+        }
 
         if (this instanceof HomePage
                 || this instanceof ActualCoursesPage
@@ -70,20 +77,29 @@ public abstract class BaseActivity extends AppCompatActivity {
                 || this instanceof PopularProjectsPage
                 || this instanceof NotificationPage
                 || this instanceof RatedPage) {
-            highlightTab(R.id.icon_home, R.id.text_home);
-        } else if (this instanceof SearchPage
-                || this instanceof FiltersPage) {
-            highlightTab(R.id.icon_search, R.id.text_search);
+            lastHighlightIcon = R.id.icon_home;
+            lastHighlightText = R.id.text_home;
+            highlightTab(lastHighlightIcon, lastHighlightText);
+        } else if (this instanceof SearchPage) {
+            lastHighlightIcon = R.id.icon_search;
+            lastHighlightText = R.id.text_search;
+            highlightTab(lastHighlightIcon, lastHighlightText);
         } else if (this instanceof CoursesPage
                 || this instanceof ProgramPage
                 || this instanceof LessonPage) {
-            highlightTab(R.id.icon_courses, R.id.text_courses);
+            lastHighlightIcon = R.id.icon_courses;
+            lastHighlightText = R.id.text_courses;
+            highlightTab(lastHighlightIcon, lastHighlightText);
         } else if (this instanceof FavoritesPage) {
-            highlightTab(R.id.icon_favorites, R.id.text_favorites);
+            lastHighlightIcon = R.id.icon_favorites;
+            lastHighlightText = R.id.text_favorites;
+            highlightTab(lastHighlightIcon, lastHighlightText);
         } else if (this instanceof ProfilePage
                 || this instanceof SettingsPage
                 || this instanceof EditProfilePage) {
-            highlightTab(R.id.icon_profile, R.id.text_profile);
+            lastHighlightIcon = R.id.icon_profile;
+            lastHighlightText = R.id.text_profile;
+            highlightTab(lastHighlightIcon, lastHighlightText);
         }
     }
 
