@@ -8,7 +8,8 @@
     android:layout_margin="8dp"
     android:background="@drawable/search_input_background"
     android:orientation="horizontal"
-    android:paddingVertical="14dp"
+    android:layout_marginBottom="92dp"
+    android:paddingVertical="@dimen/space"
     android:paddingHorizontal="16dp"
     android:clipToPadding="false"
     android:clipChildren="false">
@@ -23,7 +24,7 @@
         android:text="@string/You_save_favorite"/>
 
     <TextView
-        android:id="@+id/moove_text"
+        android:id="@+id/moove_button"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:background="@drawable/search_input_background"
@@ -39,7 +40,7 @@
 
     <!-- Кнопка настроек -->
     <ImageButton
-        android:id="@+id/settings_button"
+        android:id="@+id/close_button"
         android:layout_width="38dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"

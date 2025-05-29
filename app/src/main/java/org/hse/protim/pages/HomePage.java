@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import org.hse.protim.DTO.courses.CoursePreviewDTO;
@@ -57,6 +59,7 @@ public class HomePage extends BaseActivity {
     private Map<Long, List<ImageButton>> buttonLikeMap = new HashMap<>();
     private Map<Long, List<TextView>> textViewMap = new HashMap<>();
     private Map<Long, List<ImageButton>> favouritesMap = new HashMap<>();
+    private ImageView buttonFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class HomePage extends BaseActivity {
         courseClient = new CourseClient(retrofitProvider);
 
         projectClient = new ProjectClient(retrofitProvider);
+
     }
 
     private void handle() {
@@ -278,6 +282,8 @@ public class HomePage extends BaseActivity {
                     favouritesHandler(projectId, favoriteButton);
                     projectAuthorHandler(projectId, projectAuthor);
 
+
+
                     projectViews.add(projectView);
                 }
 
@@ -385,6 +391,8 @@ public class HomePage extends BaseActivity {
                         @Override
                         public void onSuccess(Boolean isLike) {
                             updateFavouritesButtons(projectId, isLike);
+                            showFavoritePopup();
+                            showSelectionPopup();
                         }
 
                         @Override

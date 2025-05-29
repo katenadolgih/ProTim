@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/dot_inactive">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -16,7 +14,7 @@
             <!-- Слайдер -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="360dp">
+                android:layout_height="380dp">
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewPagerSlider"
@@ -28,7 +26,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginBottom="44dp"
                     app:dotsColor="@color/dot_inactive_60"
                     app:selectedDotColor="@color/dot_inactive"
                     app:dotsCornerRadius="4dp"
@@ -79,9 +77,10 @@
                             android:id="@+id/seeAllCourses"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Смотреть все >"
+                            android:text="@string/Watch_all"
                             android:textColor="@color/button_color"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:drawableEndCompat="@drawable/ic_next" />
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -120,9 +119,10 @@
                             android:id="@+id/seeAllProjects"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Смотреть все >"
+                            android:text="@string/Watch_all"
                             android:textColor="@color/button_color"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:drawableEndCompat="@drawable/ic_next"/>
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -160,9 +160,10 @@
                             android:id="@+id/seeAllPopularProjects"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Смотреть все >"
+                            android:text="@string/Watch_all"
                             android:textColor="@color/button_color"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:drawableEndCompat="@drawable/ic_next"/>
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -188,16 +189,6 @@
         android:elevation="8dp"
         android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/profileAvatar"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_user"
-            android:background="@drawable/photo_shape"
-            android:clipToOutline="true"
-            android:scaleType="centerCrop"
-            android:layout_marginEnd="8dp" />
-
         <LinearLayout
             android:id="@+id/profileClickArea"
             android:layout_width="0dp"
@@ -208,6 +199,15 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileAvatar"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_profile"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="@dimen/half_space"
+                android:layout_gravity="center_vertical"
+                app:shapeAppearanceOverlay="@style/RoundedPhotoStyle"/>
 
             <TextView
                 android:id="@+id/userName"

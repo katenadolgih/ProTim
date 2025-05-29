@@ -51,7 +51,6 @@ public class NewProjectsPage extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_projects_page);
 
-
         init();
         handle();
 

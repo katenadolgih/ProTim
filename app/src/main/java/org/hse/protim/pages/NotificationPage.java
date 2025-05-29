@@ -10,13 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.hse.protim.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NotificationPage extends BaseActivity {
 
     private ImageButton buttonBack;
     private TextView titleView;
+    private RecyclerView recyclerView;
+    private NotificationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +45,20 @@ public class NotificationPage extends BaseActivity {
     private void init() {
         buttonBack = findViewById(R.id.button_back);
         titleView = findViewById(R.id.title_text);
+        recyclerView = findViewById(R.id.notification_recycler);
+
+        List<NotificationItem> notifications = new ArrayList<>();
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Вардиева Наталья", "Дом мечты"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Иванов Сергей", "Город солнца"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Вардиева Наталья", "Дом мечты"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Иванов Сергей", "Город солнца"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Иванов Сергей", "Город солнца"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Вардиева Наталья", "Дом мечты"));
+        notifications.add(new NotificationItem(R.drawable.ic_user, "Иванов Сергей", "Город солнца"));
+
+        adapter = new NotificationAdapter(notifications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void handle() {

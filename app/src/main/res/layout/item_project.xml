@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="317dp"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/half_space"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="10dp"
@@ -29,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:maxWidth="350dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/photo_project"
+                android:src="@drawable/ic_building"
                 android:contentDescription="@string/project_image"
                 app:shapeAppearanceOverlay="@style/RoundedImageStyle"/>
 
