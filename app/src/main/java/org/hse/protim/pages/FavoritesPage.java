@@ -118,10 +118,6 @@ public class FavoritesPage extends BaseActivity {
             Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
             startActivity(intent);
         });
-        seeAllSelections.setOnClickListener(v -> {
-            Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
-            startActivity(intent);
-        });
 
     }
 

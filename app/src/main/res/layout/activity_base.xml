@@ -9,6 +9,7 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/dot_inactive"
         android:layout_weight="1" />
 
     <include layout="@layout/custom_bottom_nav" />
