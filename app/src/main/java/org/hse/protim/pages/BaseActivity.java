@@ -2,22 +2,30 @@ package org.hse.protim.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.hse.protim.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected LinearLayout navHome, navSearch, navCourses, navFavorites, navProfile;
+    protected PopupWindow popupWindow;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +86,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 || this instanceof ProgramPage
                 || this instanceof LessonPage) {
             highlightTab(R.id.icon_courses, R.id.text_courses);
-        } else if (this instanceof FavoritesPage) {
+        } else if (this instanceof FavoritesPage
+                || this instanceof SelectionsAllPage
+                || this instanceof SelectionPage
+                || this instanceof SelectionCreatingPage
+                || this instanceof SelectionEditingPage
+                || this instanceof SelectionDetailsPage) {
             highlightTab(R.id.icon_favorites, R.id.text_favorites);
         } else if (this instanceof ProfilePage
                 || this instanceof SettingsPage
@@ -117,5 +130,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                 text.setTextColor(ContextCompat.getColor(this, R.color.gray_search_text)); // исправлено
         }
     }
+    public void showFavoritePopup() {
+        FavoriteBottomSheet bottomSheet = new FavoriteBottomSheet();
+        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+    }
+    public void showSelectionPopup() {
+        SelectionBottomSheet bottomSheet = new SelectionBottomSheet();
+        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+    }
+
+
 }
 

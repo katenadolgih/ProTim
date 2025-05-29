@@ -70,4 +70,20 @@
     <string name="programm_page_title">Программа</string>
     <string name="lesson_number">Номер урока</string>
     <string name="Next_lesson">Следующий урок</string>
+    <string name="Searching_job">Ищу работу</string>
+    <string name="Searching_internal">Ищу стажировку</string>
+    <string name="Confidentiality">Конфиденциальность</string>
+    <string name="Hide_birthday">Скрыть дату рождения</string>
+    <string name="Public_profile">Публичный профиль</string>
+    <string name="Watch_all">Смотреть все</string>
+    <string name="Selections">Подборки</string>
+    <string name="All_projects">Все проекты</string>
+    <string name="favorites">Избранное</string>
+    <string name="buttonCreate">Создать</string>
+    <string name="SelectionName">Название подборки</string>
+    <string name="SelectionDescription">Описание</string>
+    <string name="SelectionCreating">Создание подборки</string>
+    <string name="selection_title">Название подборки</string>
+    <string name="selections_all_title">Все подборки</string>
+    <string name="Add_selection">Добавить подборку</string>
 </resources>

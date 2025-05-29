@@ -5,13 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Контент активностей будет подставляться сюда -->
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Кастомный навбар -->
     <include layout="@layout/custom_bottom_nav" />
 </LinearLayout>

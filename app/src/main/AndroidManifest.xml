@@ -15,6 +15,21 @@
         android:theme="@style/Theme.ProTim"
         tools:targetApi="31">
         <activity
+            android:name=".pages.SelectionPage"
+            android:exported="false"  />
+        <activity
+            android:name=".pages.SelectionDetailsPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.SelectionsAllPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.SelectionEditingPage"
+            android:exported="false" />
+        <activity
+            android:name=".pages.SelectionCreatingPage"
+            android:exported="false" />
+        <activity
             android:name=".pages.LessonPage"
             android:exported="false" />
         <activity
