@@ -86,4 +86,7 @@
     <string name="selection_title">Название подборки</string>
     <string name="selections_all_title">Все подборки</string>
     <string name="Add_selection">Добавить подборку</string>
+    <string name="SelectionEditing">Редактирование</string>
+    <string name="buttonEdit">Сохранить изменения</string>
+    <string name="Delete_selection">"Удалить подборку "</string>
 </resources>
