@@ -16,9 +16,6 @@
             layout="@layout/toolbar_default"
             android:id="@+id/toolbar" />
 
-        <!-- Здесь можно добавить другие блоки -->
-
-        <!-- Если не нужно скроллить список внутри, задаем wrap_content -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notification_recycler"
             android:layout_width="match_parent"
