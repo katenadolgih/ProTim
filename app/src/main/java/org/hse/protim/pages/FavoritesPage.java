@@ -2,19 +2,21 @@ package org.hse.protim.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.collection.CollectionDTO;
+import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.collection.CollectionClient;
+import org.hse.protim.clients.retrofit.favourites.FavouritesClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,11 @@ public class FavoritesPage extends BaseActivity {
     private TextView seeAllSelections;
     private LinearLayout selectionLayout;
     private RecyclerView selectionsRecycler;
+    private CollectionClient collectionClient;
+    private FavouritesClient favouritesClient;
+    private RetrofitProvider retrofitProvider;
 
-    private List<Selection> selections = new ArrayList<>();
+    private List<CollectionDTO> collectionDTOS = new ArrayList<>();
     private TextView titleView;
     private ImageButton buttonBack;
 
@@ -39,59 +44,34 @@ public class FavoritesPage extends BaseActivity {
         init();
         handle();
         loadSampleData();
-        setupAdapters();
 
         titleView.setText(R.string.favorites);
-
 
         RecyclerView recyclerPopularProjects = findViewById(R.id.popularProjectsRecycler);
         recyclerPopularProjects.setLayoutManager(new LinearLayoutManager(this));
 
-        LayoutInflater inflater = LayoutInflater.from(this);
-        List<View> projectViews = new ArrayList<>();
+        setProjects(recyclerPopularProjects);
+    }
 
-        View project1 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
-        ((ImageView) project1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project1.findViewById(R.id.projectDescription)).setText("Популярный проект A — исследование ИИ");
-        ((TextView) project1.findViewById(R.id.projectHashtags)).setText("#AI #Research #Tech");
-        ((TextView) project1.findViewById(R.id.projectAuthor)).setText("Смирнов Алексей");
-        ((TextView) project1.findViewById(R.id.likesCount)).setText("105");
-
-        View project2 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
-        ((ImageView) project2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project2.findViewById(R.id.projectDescription)).setText("Популярный проект B — мобильное приложение для экологии");
-        ((TextView) project2.findViewById(R.id.projectHashtags)).setText("#Eco #Mobile #UX");
-        ((TextView) project2.findViewById(R.id.projectAuthor)).setText("Кузнецова Ирина");
-        ((TextView) project2.findViewById(R.id.likesCount)).setText("321");
-
-        View project3 = inflater.inflate(R.layout.item_project, recyclerPopularProjects, false);
-        ((ImageView) project3.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project3.findViewById(R.id.projectDescription)).setText("Популярный проект C — цифровая платформа образования");
-        ((TextView) project3.findViewById(R.id.projectHashtags)).setText("#EdTech #Platform #Java");
-        ((TextView) project3.findViewById(R.id.projectAuthor)).setText("Иванова Мария");
-        ((TextView) project3.findViewById(R.id.likesCount)).setText("678");
-
-        projectViews.add(project1);
-        projectViews.add(project2);
-        projectViews.add(project3);
-
-        recyclerPopularProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private void setProjects(RecyclerView recyclerPopularProjects) {
+        favouritesClient.getFavourites(new FavouritesClient.GetFavouritesCallback() {
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
+            public void onSuccess(List<ProjectDTO> projectDTOS) {
+                ProjectAdapter adapter = new ProjectAdapter(
+                        FavoritesPage.this,
+                        projectDTOS,
+                        project -> {
+                            Intent intent = new Intent(FavoritesPage.this, ProjectDetailsPage.class);
+                            intent.putExtra("PROJECT_ID", project.projectId());
+                            startActivity(intent);
+                        }
+                );
+                recyclerPopularProjects.setAdapter(adapter);
             }
 
             @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
-
-            @Override
-            public int getItemCount() {
-                return projectViews.size();
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return position;
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(FavoritesPage.this, message, Toast.LENGTH_LONG));
             }
         });
     }
@@ -104,10 +84,13 @@ public class FavoritesPage extends BaseActivity {
         titleView = findViewById(R.id.title_text);
         buttonBack = findViewById(R.id.button_back);
 
+        retrofitProvider = new RetrofitProvider(this);
+        collectionClient = new CollectionClient(retrofitProvider);
+        favouritesClient = new FavouritesClient(retrofitProvider);
     }
 
     private void handle() {
-//        findViewById(R.id.toolbar).findViewById(R.id.button_back).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.toolbar).findViewById(R.id.button_back).setOnClickListener(v -> onBackPressed());
         buttonBack.setVisibility(View.GONE);
         addSelection.setOnClickListener(v -> {
             Intent intent = new Intent(FavoritesPage.this, SelectionCreatingPage.class);
@@ -118,25 +101,30 @@ public class FavoritesPage extends BaseActivity {
             Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
             startActivity(intent);
         });
-        seeAllSelections.setOnClickListener(v -> {
-            Intent intent = new Intent(FavoritesPage.this, SelectionsAllPage.class);
-            startActivity(intent);
-        });
-
     }
 
     private void loadSampleData() {
-        selections.add(new Selection("Моя подборка 1", "Описание подборки"));
-        selections.add(new Selection("Подборка для вдохновения", "Описание подборки"));
+        collectionClient.getCollectionPreview(new CollectionClient.GetCollectionPreviewCallback() {
+            @Override
+            public void onSuccess(CollectionDTO collectionDTO) {
+                if (collectionDTO != null) {
+                    collectionDTOS.add(collectionDTO);
+                } else {
+                    selectionLayout.setVisibility(View.GONE);
+                }
+                setupAdapters();
+            }
 
-        if (selections.isEmpty()) {
-            selectionLayout.setVisibility(View.GONE);
-        }
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(FavoritesPage.this
+                        , message, Toast.LENGTH_LONG).show());
+            }
+        });
     }
 
     private void setupAdapters() {
         selectionsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        selectionsRecycler.setAdapter(new SelectionAdapter(selections, false));
-
+        selectionsRecycler.setAdapter(new SelectionAdapter(collectionDTOS, false));
     }
 }

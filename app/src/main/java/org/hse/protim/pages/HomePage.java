@@ -287,16 +287,28 @@ public class HomePage extends BaseActivity {
                     projectViews.add(projectView);
                 }
 
-                recyclerProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                    @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
+                recyclerProjects.setAdapter(new RecyclerView.Adapter<>() {
+                    @Override
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                        return new RecyclerView.ViewHolder(projectViews.get(viewType)) {
+                        };
                     }
-                    @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                         ProjectDTO p = projects.get(position);
                         holder.itemView.setOnClickListener(v -> projectClickHandle(p));
                     }
-                    @Override public int getItemCount() { return projectViews.size(); }
-                    @Override public int getItemViewType(int position) { return position; }
+
+                    @Override
+                    public int getItemCount() {
+                        return projectViews.size();
+                    }
+
+                    @Override
+                    public int getItemViewType(int position) {
+                        return position;
+                    }
                 });
             }
 

@@ -1,20 +1,18 @@
 package org.hse.protim.pages;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.collection.CollectionClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,9 @@ public class SelectionsAllPage extends BaseActivity {
     private TextView titleView;
     private LinearLayout selectionLayout;
     private RecyclerView selectionsRecycler;
-    private List<Selection> selections = new ArrayList<>();
+    private RetrofitProvider retrofitProvider;
+    private CollectionClient collectionClient;
+    private List<CollectionDTO> selections = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +35,6 @@ public class SelectionsAllPage extends BaseActivity {
         init();
         handle();
         loadSampleData();
-        setupAdapters();
 
         titleView.setText(R.string.selections_all_title);
     }
@@ -46,7 +45,8 @@ public class SelectionsAllPage extends BaseActivity {
         titleView = findViewById(R.id.title_text);
         selectionLayout = findViewById(R.id.selection);
         selectionsRecycler = findViewById(R.id.selectionsRecycler);
-
+        retrofitProvider = new RetrofitProvider(this);
+        collectionClient = new CollectionClient(retrofitProvider);
     }
 
     private void handle() {
@@ -56,12 +56,19 @@ public class SelectionsAllPage extends BaseActivity {
     }
 
     private void loadSampleData() {
-        selections.add(new Selection("Моя подборка 1", "Описание подборки"));
-        selections.add(new Selection("Подборка для вдохновения", "Описание подборки"));
-        selections.add(new Selection("Моя подборка 1", "Описание подборки"));
-        selections.add(new Selection("Подборка для вдохновения", "Описание подборки"));
-        selections.add(new Selection("Моя подборка 1", "Описание подборки"));
-        selections.add(new Selection("Подборка для вдохновения", "Описание подборки"));
+        collectionClient.getCollectionPreviewAll(new CollectionClient.GetCollectionPreviewAll() {
+            @Override
+            public void onSuccess(List<CollectionDTO> collectionDTOS) {
+                selections.addAll(collectionDTOS);
+                setupAdapters();
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(SelectionsAllPage.this, message, Toast.LENGTH_LONG)
+                        .show());
+            }
+        });
 
     }
 

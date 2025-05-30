@@ -11,6 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.imageview.ShapeableImageView;
+
+import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.R;
 
 import java.util.HashSet;
@@ -22,11 +26,11 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
     private static final int TYPE_DEFAULT = 0;
     private static final int TYPE_POPUP = 1;
 
-    private List<Selection> selectionList;
+    private List<CollectionDTO> selectionList;
     private boolean usePopupLayout;
     private Set<Integer> selectedPositions = new HashSet<>(); // Для хранения отмеченных чекбоксов
 
-    public SelectionAdapter(List<Selection> selectionList, boolean usePopupLayout) {
+    public SelectionAdapter(List<CollectionDTO> selectionList, boolean usePopupLayout) {
         this.selectionList = selectionList;
         this.usePopupLayout = usePopupLayout;
     }
@@ -48,11 +52,11 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
 
     @Override
     public void onBindViewHolder(@NonNull SelectionViewHolder holder, int position) {
-        Selection selection = selectionList.get(position);
-        holder.title.setText(selection.getTitle());
+        CollectionDTO collection = selectionList.get(position);
+        holder.title.setText(collection.name());
 
         if (holder.viewType == TYPE_DEFAULT && holder.description != null) {
-            holder.description.setText(selection.getDescription());
+            holder.description.setText(collection.description());
             holder.itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, SelectionDetailsPage.class);
@@ -68,6 +72,10 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
                 }
             });
         }
+
+        Glide.with(holder.itemView.getContext())
+                .load(collection.photoPath())
+                .into(holder.projectImage);
     }
 
     @Override
@@ -83,12 +91,14 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
         TextView title;
         TextView description;
         CheckBox checkBox;
+        ShapeableImageView projectImage;
         int viewType;
 
         public SelectionViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
             this.viewType = viewType;
             title = itemView.findViewById(R.id.selectionName);
+            projectImage = itemView.findViewById(R.id.projectImage);
             if (viewType == TYPE_DEFAULT) {
                 description = itemView.findViewById(R.id.selectionDescription);
             } else {

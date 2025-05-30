@@ -20,7 +20,7 @@
                 android:id="@+id/specialist_photo"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
-                android:src="@drawable/ic_user"
+                android:src="@drawable/ic_profile"
                 android:scaleType="centerCrop"
                 android:layout_centerHorizontal="true"
                 app:shapeAppearanceOverlay="@style/RoundedPhotoStyle" />

@@ -10,14 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.R;
 
 import java.util.ArrayList;
@@ -30,7 +26,7 @@ public class SelectionPage extends BaseActivity {
     private LinearLayout selectionLayout;
     private RecyclerView selectionsRecycler;
 
-    private List<Selection> selections = new ArrayList<>();
+    private List<CollectionDTO> selections = new ArrayList<>();
     private TextView titleView;
     private ImageButton buttonBack;
 
@@ -125,12 +121,7 @@ public class SelectionPage extends BaseActivity {
     }
 
     private void loadSampleData() {
-        selections.add(new Selection("Моя подборка 1", "Описание подборки"));
-        selections.add(new Selection("Подборка для вдохновения", "Описание подборки"));
 
-        if (selections.isEmpty()) {
-            selectionLayout.setVisibility(View.GONE);
-        }
     }
 
     private void setupAdapters() {

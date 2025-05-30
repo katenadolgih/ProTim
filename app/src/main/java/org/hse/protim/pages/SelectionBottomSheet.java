@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.R;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SelectionBottomSheet extends BottomSheetDialogFragment {
 
     private TextView addSelection;
     private RecyclerView selectionsRecycler;
-    private List<Selection> selections = new ArrayList<>();
+    private List<CollectionDTO> selections = new ArrayList<>();
 
 
     @Override
@@ -51,9 +51,9 @@ public class SelectionBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void loadSampleData() {
-        selections.add(new Selection("Подборка 1", "Описание 1"));
-        selections.add(new Selection("Подборка 2", "Описание 2"));
-        selections.add(new Selection("Подборка 3", "Описание 3"));
+//        selections.add(new Selection("Подборка 1", "Описание 1"));
+//        selections.add(new Selection("Подборка 2", "Описание 2"));
+//        selections.add(new Selection("Подборка 3", "Описание 3"));
     }
 
     private void setupAdapter() {

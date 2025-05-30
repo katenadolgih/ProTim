@@ -79,14 +79,16 @@ public class SelectionDetailsPage extends BaseActivity {
         projectViews.add(project2);
         projectViews.add(project3);
 
-        recyclerNewProjects.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        recyclerNewProjects.setAdapter(new RecyclerView.Adapter<>() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {};
+                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {
+                };
             }
 
             @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            }
 
             @Override
             public int getItemCount() {
