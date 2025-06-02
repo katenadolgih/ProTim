@@ -1,5 +1,10 @@
 package org.hse.protim.pages;
 
+import android.content.Context;
+import android.content.Intent;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,31 +15,34 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import org.hse.protim.DTO.notification.NotificationDTO;
 import org.hse.protim.R;
 
 import java.util.List;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private List<NotificationItem> notificationList;
+    private List<NotificationDTO> notificationList;
 
-    public NotificationAdapter(List<NotificationItem> notificationList) {
+    public NotificationAdapter(List<NotificationDTO> notificationList) {
         this.notificationList = notificationList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView avatarImage;
-        TextView nameText, projectText, timeText;
+        TextView nameText, timeText;
 
         public ViewHolder(View view) {
             super(view);
             avatarImage = view.findViewById(R.id.avatar);
             nameText = view.findViewById(R.id.notification_text);
-            projectText = view.findViewById(R.id.project_name);
             timeText = view.findViewById(R.id.time_text);
         }
     }
@@ -49,19 +57,44 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NotificationItem item = notificationList.get(position);
-        holder.avatarImage.setImageResource(item.getAvatarResId());
+        NotificationDTO item = notificationList.get(position);
+        Context currContext = holder.itemView.getContext();
 
-        String name = item.getFullName();
-        String fullText = name + " оценил-(а) ваш проект";
+        Glide.with(currContext)
+                .load(item.photoPath())
+                .error(R.drawable.ic_profile)
+                .placeholder(R.drawable.ic_profile)
+                .into(holder.avatarImage);
 
-        SpannableString spannable = new SpannableString(fullText);
-        spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#1A73E8")), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannable.setSpan(new UnderlineSpan(), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        String[] s = item.text().split(" ");
+        String fullName = String.format("%s %s", s[0], s[1]);
 
+        SpannableString spannable = new SpannableString(item.text());
+
+        // Обработчик клика по имени
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Intent intent = new Intent(currContext, ProfilePage.class);
+                intent.putExtra("fromPage", "specialist");
+                intent.putExtra("userId", item.userId());
+                currContext.startActivity(intent); 
+            }
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(Color.parseColor("#1A73E8"));
+                ds.setUnderlineText(true);
+            }
+        };
+
+        spannable.setSpan(clickableSpan, 0, fullName.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        holder.nameText.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.nameText.setHighlightColor(Color.TRANSPARENT);
         holder.nameText.setText(spannable);
-        holder.projectText.setText("“" + item.getProjectName() + "”");
-        holder.timeText.setText("11:59");
+
+        holder.timeText.setText(item.time());
     }
 
     @Override

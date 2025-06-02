@@ -9,9 +9,11 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,13 +24,16 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import org.hse.protim.DTO.courses.CoursePreviewDTO;
+import org.hse.protim.DTO.notification.LastNotificationDTO;
 import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.RetrofitProvider;
 import org.hse.protim.clients.retrofit.courses.CourseClient;
+import org.hse.protim.clients.retrofit.notification.NotificationClient;
 import org.hse.protim.clients.retrofit.projects.ProjectClient;
 
 import java.util.ArrayList;
@@ -51,15 +56,19 @@ public class HomePage extends BaseActivity {
     private RecyclerView recyclerPopularProjects;
     private TextView seeAllPopularProjects;
 
-    private ImageView notificationIcon;
+    private ImageView notificationIcon, goToUser;
     private RetrofitProvider retrofitProvider;
     private CourseClient courseClient;
     private ProjectClient projectClient;
+    private NotificationClient notificationClient;
 
     private Map<Long, List<ImageButton>> buttonLikeMap = new HashMap<>();
     private Map<Long, List<TextView>> textViewMap = new HashMap<>();
     private Map<Long, List<ImageButton>> favouritesMap = new HashMap<>();
     private ImageView buttonFavorite;
+    private ShapeableImageView profileAvatar;
+    private TextView userName;
+    private LinearLayout topBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +80,7 @@ public class HomePage extends BaseActivity {
 
         setupSlider();
         setupRecyclerView();
+        setupNotification();
     }
 
     private void init() {
@@ -92,7 +102,12 @@ public class HomePage extends BaseActivity {
         courseClient = new CourseClient(retrofitProvider);
 
         projectClient = new ProjectClient(retrofitProvider);
+        notificationClient = new NotificationClient(retrofitProvider);
 
+        profileAvatar = findViewById(R.id.profileAvatar);
+        userName = findViewById(R.id.userName);
+        topBar = findViewById(R.id.topBar);
+        goToUser = findViewById(R.id.goToUser);
     }
 
     private void handle() {
@@ -114,6 +129,35 @@ public class HomePage extends BaseActivity {
         notificationIcon.setOnClickListener(v -> {
             Intent intent = new Intent(HomePage.this, NotificationPage.class);
             startActivity(intent);
+        });
+    }
+
+    private void setupNotification() {
+        notificationClient.getLastNotification(new NotificationClient.GetLastNotificationCallback() {
+            @Override
+            public void onSuccess(LastNotificationDTO lastNotificationDTO) {
+                if (lastNotificationDTO == null) {
+                    topBar.setVisibility(View.GONE);
+                } else {
+                    userName.setText(lastNotificationDTO.fullName());
+                    Glide.with(HomePage.this)
+                            .load(lastNotificationDTO.photoPath())
+                            .error(R.drawable.ic_profile)
+                            .placeholder(R.drawable.ic_profile)
+                            .into(profileAvatar);
+                    goToUser.setOnClickListener(v -> {
+                        Intent intent = new Intent(HomePage.this, ProfilePage.class);
+                        intent.putExtra("userId", lastNotificationDTO.userId());
+                        intent.putExtra("fromPage", "specialist");
+                        startActivity(intent);
+                    });
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(HomePage.this, message, Toast.LENGTH_LONG).show());
+            }
         });
     }
 
@@ -403,8 +447,10 @@ public class HomePage extends BaseActivity {
                         @Override
                         public void onSuccess(Boolean isLike) {
                             updateFavouritesButtons(projectId, isLike);
-                            showFavoritePopup();
-                            showSelectionPopup();
+                            if (isLike) {
+                                showFavoritePopup();
+                                showSelectionPopup(projectId);
+                            }
                         }
 
                         @Override
@@ -466,14 +512,16 @@ public class HomePage extends BaseActivity {
                         courseViews.add(courseView);
                     }
 
-                    recyclerCourses.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    recyclerCourses.setAdapter(new RecyclerView.Adapter<>() {
                         @Override
                         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            return new RecyclerView.ViewHolder(courseViews.get(viewType)) {};
+                            return new RecyclerView.ViewHolder(courseViews.get(viewType)) {
+                            };
                         }
 
                         @Override
-                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {}
+                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                        }
 
                         @Override
                         public int getItemCount() {

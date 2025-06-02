@@ -1,5 +1,6 @@
 package org.hse.protim.pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -51,16 +52,30 @@ public class SelectionsAllPage extends BaseActivity {
 
     private void handle() {
         if (buttonBack != null) {
-            buttonBack.setOnClickListener(v -> onBackPressed());
+            buttonBack.setOnClickListener(v -> {
+                Intent intent = new Intent(this, FavoritesPage.class);
+                startActivity(intent);
+            });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, FavoritesPage.class);
+        startActivity(intent);
     }
 
     private void loadSampleData() {
         collectionClient.getCollectionPreviewAll(new CollectionClient.GetCollectionPreviewAll() {
             @Override
             public void onSuccess(List<CollectionDTO> collectionDTOS) {
-                selections.addAll(collectionDTOS);
-                setupAdapters();
+                if (collectionDTOS == null || collectionDTOS.isEmpty()) {
+                    Intent intent = new Intent(SelectionsAllPage.this, FavoritesPage.class);
+                    startActivity(intent);
+                } else {
+                    selections.addAll(collectionDTOS);
+                    setupAdapters();
+                }
             }
 
             @Override
@@ -73,9 +88,7 @@ public class SelectionsAllPage extends BaseActivity {
     }
 
     private void setupAdapters() {
-        // Список подборок
         selectionsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         selectionsRecycler.setAdapter(new SelectionAdapter(selections, false));
-
     }
 }

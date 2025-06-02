@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -23,14 +24,27 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.collection.CollectionCountDTO;
+import org.hse.protim.DTO.collection.CollectionDTO;
+import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.collection.CollectionClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public class SelectionDetailsPage extends BaseActivity {
     private ImageButton buttonBack;
     private TextView titleView;
+    private RecyclerView recyclerNewProjects;
+    private RetrofitProvider retrofitProvider;
+    private CollectionClient collectionClient;
+    private Long collectionId;
+    private String collectionName;
+    private String fromPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,65 +58,84 @@ public class SelectionDetailsPage extends BaseActivity {
         });
         init();
         handle();
+        initViews();
 
-        titleView.setText(R.string.selection_title);
         findViewById(R.id.more_selection).setOnClickListener(this::showPopupMenuSelection);
-
-        RecyclerView recyclerNewProjects = findViewById(R.id.favoriteProjectsRecycler);
-        recyclerNewProjects.setLayoutManager(new LinearLayoutManager(this));
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        List<View> projectViews = new ArrayList<>();
-
-        View project1 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project1.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project1.findViewById(R.id.projectDescription)).setText("Популярный проект A — исследование ИИ");
-        ((TextView) project1.findViewById(R.id.projectHashtags)).setText("#AI #Research #Tech");
-        ((TextView) project1.findViewById(R.id.projectAuthor)).setText("Смирнов Алексей");
-        ((TextView) project1.findViewById(R.id.likesCount)).setText("105");
-
-        View project2 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project2.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project2.findViewById(R.id.projectDescription)).setText("Популярный проект B — мобильное приложение для экологии");
-        ((TextView) project2.findViewById(R.id.projectHashtags)).setText("#Eco #Mobile #UX");
-        ((TextView) project2.findViewById(R.id.projectAuthor)).setText("Кузнецова Ирина");
-        ((TextView) project2.findViewById(R.id.likesCount)).setText("321");
-
-        View project3 = inflater.inflate(R.layout.item_project, recyclerNewProjects, false);
-        ((ImageView) project3.findViewById(R.id.projectImage)).setImageResource(R.drawable.photo_project);
-        ((TextView) project3.findViewById(R.id.projectDescription)).setText("Популярный проект C — цифровая платформа образования");
-        ((TextView) project3.findViewById(R.id.projectHashtags)).setText("#EdTech #Platform #Java");
-        ((TextView) project3.findViewById(R.id.projectAuthor)).setText("Иванова Мария");
-        ((TextView) project3.findViewById(R.id.likesCount)).setText("678");
-
-        projectViews.add(project1);
-        projectViews.add(project2);
-        projectViews.add(project3);
-
-        recyclerNewProjects.setAdapter(new RecyclerView.Adapter<>() {
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                return new RecyclerView.ViewHolder(projectViews.get(viewType)) {
-                };
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            }
-
-            @Override
-            public int getItemCount() {
-                return projectViews.size();
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return position;
-            }
-        });
-
     }
 
+    @Override
+    public void onBackPressed() {
+        collectionClient.getCollectionPreviewAll(new CollectionClient.GetCollectionPreviewAll() {
+            @Override
+            public void onSuccess(List<CollectionDTO> collectionDTOS) {
+                Intent intent;
+                if (collectionDTOS == null || collectionDTOS.isEmpty()) {
+                    intent = new Intent(SelectionDetailsPage.this, FavoritesPage.class);
+                    startActivity(intent);
+                } else {
+                    if (!Objects.equals(fromPage, "favourites")) {
+                        intent = new Intent(SelectionDetailsPage.this, SelectionsAllPage.class);
+                        startActivity(intent);
+                    } else {
+                        intent = new Intent(SelectionDetailsPage.this, FavoritesPage.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(SelectionDetailsPage.this,
+                        message, Toast.LENGTH_LONG).show());
+            }
+        });
+    }
+
+    private void handle() {
+        if (buttonBack != null) {
+            buttonBack.setOnClickListener(v -> onBackPressed());
+        }
+//        settingsButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(SelectionDetailsPage.this, FiltersPage.class);
+//            startActivity(intent);
+//        });
+    }
+    private void initViews() {
+        buttonBack = findViewById(R.id.button_back);
+        titleView  = findViewById(R.id.title_text);
+        titleView.setText(collectionName);
+
+
+        recyclerNewProjects = findViewById(R.id.favoriteProjectsRecycler);
+        recyclerNewProjects.setLayoutManager(
+                new LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        );
+
+        collectionClient.getCollectionProjects(collectionId, new CollectionClient.GetCollectionProjectsCallback() {
+            @Override
+            public void onSuccess(List<ProjectDTO> collectionProjects) {
+                SelectionDetailsPage context = SelectionDetailsPage.this;
+                recyclerNewProjects.setAdapter(new ProjectAdapter(context,
+                        collectionProjects,
+                        project -> {
+                            // клик по элементу — открываем детали
+                            Intent intent = new Intent(context, ProjectDetailsPage.class);
+                            intent.putExtra("project_id", project.projectId());
+                            intent.putExtra("project_name", project.name());
+                            startActivity(intent);
+                        },
+                        projectId -> recreate(),
+                        collectionId
+                ));
+            }
+
+            @Override
+            public void onError(String message) {
+                runOnUiThread(() -> Toast.makeText(SelectionDetailsPage.this, message, Toast.LENGTH_LONG)
+                        .show());
+            }
+        });
+    }
     public void showPopupMenuSelection(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.inflate(R.menu.selection_popup_menu);
@@ -111,7 +144,9 @@ public class SelectionDetailsPage extends BaseActivity {
             int id = item.getItemId();
 
             if (id == R.id.action_edit) {
-                startActivity(new Intent(SelectionDetailsPage.this, SelectionEditingPage.class));
+                Intent intent = new Intent(this, SelectionEditingPage.class);
+                intent.putExtra("collectionId", collectionId);
+                startActivity(intent);
                 return true;
             } else if (id == R.id.action_logout) {
                 showSettingsDialog(); // вызов попапа
@@ -130,10 +165,36 @@ public class SelectionDetailsPage extends BaseActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Удалить подборку?")
                 .setPositiveButton("Удалить", (dialog, which) -> {
-                    // Заглушка удаления
-                    Intent intent = new Intent(SelectionDetailsPage.this, SelectionPage.class);
-                    startActivity(intent);
-                    finish(); // Закрываем текущую страницу
+                    collectionClient.deleteCollectionById(collectionId, new CollectionClient.NoGetCollectionCallback() {
+                        @Override
+                        public void onSuccess() {
+                            collectionClient.getCollectionCount(new CollectionClient.GetCollectionCountCallback() {
+                                @Override
+                                public void onSuccess(CollectionCountDTO collectionCountDTO) {
+                                    Intent intent;// Закрываем текущую страницу
+                                    if (collectionCountDTO.count() > 0) {
+                                        intent = new Intent(SelectionDetailsPage.this, SelectionsAllPage.class);
+                                    } else {
+                                        intent = new Intent(SelectionDetailsPage.this, FavoritesPage.class);
+                                    }
+                                    startActivity(intent);
+                                    finish(); // Закрываем текущую страницу
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    runOnUiThread(() -> Toast.makeText(SelectionDetailsPage.this, message, Toast.LENGTH_LONG)
+                                            .show());
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            runOnUiThread(() -> Toast.makeText(SelectionDetailsPage.this,
+                                    message, Toast.LENGTH_LONG).show());
+                        }
+                    });
                 })
                 .setNegativeButton("Отмена", null)
                 .show();
@@ -142,17 +203,16 @@ public class SelectionDetailsPage extends BaseActivity {
     private void init() {
         buttonBack = findViewById(R.id.button_back);
         titleView = findViewById(R.id.title_text);
+        retrofitProvider = new RetrofitProvider(this);
+        collectionClient = new CollectionClient(retrofitProvider);
+
+        Intent intent = getIntent();
+        collectionId = intent.getLongExtra("collectionId", -1);
+        collectionName = intent.getStringExtra("collectionName");
+        fromPage = Optional.ofNullable(intent.getStringExtra("fromPage")).orElse("");
 //        settingsButton = findViewById(R.id.settings_button);
 
     }
 
-    private void handle() {
-        if (buttonBack != null) {
-            buttonBack.setOnClickListener(v -> onBackPressed());
-        }
-//        settingsButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(SelectionDetailsPage.this, FiltersPage.class);
-//            startActivity(intent);
-//        });
-    }
+
 }

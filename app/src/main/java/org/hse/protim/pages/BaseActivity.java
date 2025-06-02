@@ -2,29 +2,29 @@ package org.hse.protim.pages;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-
+import org.hse.protim.DTO.collection.UpdateFavouritesDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.favourites.FavouritesClient;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     protected LinearLayout navHome, navSearch, navCourses, navFavorites, navProfile;
     protected static int lastHighlightIcon, lastHighlightText;
     protected PopupWindow popupWindow;
+    private FavouritesClient favouritesClient;
+    private RetrofitProvider retrofitProvider;
 
 
 
@@ -57,6 +57,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         navCourses.setOnClickListener(v -> navigateTo(CoursesPage.class));
         navFavorites.setOnClickListener(v -> navigateTo(FavoritesPage.class));
         navProfile.setOnClickListener(v -> navigateTo(ProfilePage.class));
+
+        retrofitProvider = new RetrofitProvider(this);
+        favouritesClient = new FavouritesClient(retrofitProvider);
     }
 
     private void navigateTo(Class<?> activityClass) {
@@ -150,8 +153,24 @@ public abstract class BaseActivity extends AppCompatActivity {
         FavoriteBottomSheet bottomSheet = new FavoriteBottomSheet();
         bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
     }
-    public void showSelectionPopup() {
+    public void showSelectionPopup(Long projectId) {
         SelectionBottomSheet bottomSheet = new SelectionBottomSheet();
+        bottomSheet.setOnSelectionConfirmedListener(selectedCollections -> {
+            selectedCollections.forEach(el -> {
+                favouritesClient.updateFavouritesAddCol(new UpdateFavouritesDTO(projectId,
+                        el.id()), new FavouritesClient.NoRetValueCallback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        runOnUiThread(() -> Toast.makeText(BaseActivity.this
+                                , message, Toast.LENGTH_LONG).show());
+                    }
+                });
+            });
+        });
         bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
     }
 

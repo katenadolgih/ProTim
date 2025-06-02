@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import org.hse.protim.DTO.collection.UpdateFavouritesDTO;
 import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
 import org.hse.protim.clients.retrofit.RetrofitProvider;
+import org.hse.protim.clients.retrofit.favourites.FavouritesClient;
 import org.hse.protim.clients.retrofit.projects.ProjectClient;
 
 import java.util.List;
@@ -28,8 +30,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     private final List<ProjectDTO> projects;
     private final Context context;
     private final OnItemClickListener listener;
-    private  ProjectClient projectClient;
+    private ProjectClient projectClient;
     private RetrofitProvider retrofitProvider;
+    private final OnFavouriteRemoveCallback callback;
+    private Long collectionId;
+    private FavouritesClient favouritesClient;
 
     public interface OnItemClickListener {
         void onItemClick(ProjectDTO project);
@@ -37,13 +42,19 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     public ProjectAdapter(Context context,
                           List<ProjectDTO> projects,
-                          OnItemClickListener listener) {
+                          OnItemClickListener listener,
+                          OnFavouriteRemoveCallback callback,
+                          Long collectionId
+    ) {
         this.context = context;
         this.projects = projects;
         this.listener = listener;
+        this.callback = callback;
+        this.collectionId = collectionId;
 
         retrofitProvider = new RetrofitProvider(context);
         projectClient = new ProjectClient(retrofitProvider);
+        favouritesClient = new FavouritesClient(retrofitProvider);
     }
 
     @NonNull
@@ -71,7 +82,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         holder.itemView.setOnClickListener(v -> projectClickHandle(project, context));
 
         likeButtonHandler(projectId, holder.likeButton, holder.likesCount);
-        favouritesHandler(project.projectId(), holder.favouriteButton);
+        favouritesHandler(project.projectId(), holder.favouriteButton, holder.itemView);
         projectAuthorHandler(projectId, holder.author);
     }
 
@@ -97,7 +108,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         }
     }
 
-    private void favouritesHandler(Long projectId, ImageButton favouritesButton) {
+    private void favouritesHandler(Long projectId, ImageButton favouritesButton, View view) {
         Context currContext = favouritesButton.getContext();
 
         projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
@@ -113,27 +124,42 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         });
 
         favouritesButton.setOnClickListener(v -> {
-            projectClient.updateFavourites(projectId, new ProjectClient.PutLikeCallBack() {
-                @Override
-                public void onSuccess() {
-                    projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
-                        @Override
-                        public void onSuccess(Boolean isLike) {
-                            favouritesButton.setSelected(isLike);
-                        }
+            if (context instanceof SelectionDetailsPage) {
+                favouritesClient.removeFavourites(new UpdateFavouritesDTO(projectId,
+                        collectionId), new FavouritesClient.NoRetValueCallback() {
+                    @Override
+                    public void onSuccess() {
+                        callback.onFavouriteRemove(projectId);
+                    }
 
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(currContext, message, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(currContext, message, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                projectClient.updateFavourites(projectId, new ProjectClient.PutLikeCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
+                            @Override
+                            public void onSuccess(Boolean isLike) {
+                                callback.onFavouriteRemove(projectId);
+                            }
 
-                @Override
-                public void onError(String message) {
-                    Toast.makeText(currContext, message, Toast.LENGTH_LONG).show();
-                }
-            });
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(currContext, message, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(currContext, message, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         });
     }
 

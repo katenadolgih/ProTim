@@ -24,10 +24,10 @@
                 android:id="@+id/avatar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_user"
-                android:scaleType="centerCrop"
                 android:layout_gravity="center_horizontal"
-                app:shapeAppearanceOverlay="@style/RoundedPhotoStyle"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile"
+                app:shapeAppearanceOverlay="@style/RoundedPhotoStyle" />
 
             <ImageView
                 android:id="@+id/like_icon"
@@ -52,31 +52,21 @@
                 android:id="@+id/notification_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Вардиева Наталья оценил-(а) ваш проект"
-                android:textSize="12sp"
+                android:lineSpacingExtra="2dp"
                 android:textColor="@color/black"
-                android:lineSpacingExtra="2dp" />
+                android:textSize="12sp" />
 
             <!-- Название проекта -->
-            <TextView
-                android:id="@+id/project_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="“Дом мечты”"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                android:layout_marginTop="2dp" />
 
             <!-- Время -->
             <TextView
                 android:id="@+id/time_text"
                 android:layout_width="wrap_content"
-                android:layout_gravity="bottom"
                 android:layout_height="wrap_content"
-                android:text="11:59"
-                android:textSize="8sp"
+                android:layout_gravity="bottom"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/gray_date_text"
-                android:layout_marginTop="4dp" />
+                android:textSize="8sp" />
         </LinearLayout>
 
         <!-- Индикатор нового уведомления -->

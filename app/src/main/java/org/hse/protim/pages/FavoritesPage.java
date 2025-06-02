@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.hse.protim.DTO.collection.CollectionCountDTO;
 import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.DTO.project.ProjectDTO;
 import org.hse.protim.R;
@@ -64,7 +65,9 @@ public class FavoritesPage extends BaseActivity {
                             Intent intent = new Intent(FavoritesPage.this, ProjectDetailsPage.class);
                             intent.putExtra("PROJECT_ID", project.projectId());
                             startActivity(intent);
-                        }
+                        },
+                        projectId -> recreate(),
+                        -1L
                 );
                 recyclerPopularProjects.setAdapter(adapter);
             }

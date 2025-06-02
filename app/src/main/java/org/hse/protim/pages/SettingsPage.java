@@ -333,6 +333,8 @@ public class SettingsPage extends BaseActivity {
                     );
                 }
             });
+        } else {
+            photoSent = true;
         }
     }
     private synchronized void checkAndProceed() {

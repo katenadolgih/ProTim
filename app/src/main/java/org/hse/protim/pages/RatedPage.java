@@ -1,5 +1,7 @@
 package org.hse.protim.pages;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,8 +106,15 @@ public class RatedPage extends BaseActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             RetLikesDTO user = users.get(position);
+            Context context = holder.itemView.getContext();
 
             holder.userName.setText(user.fullName());
+            holder.userName.setOnClickListener(v -> {
+                Intent intent = new Intent(holder.itemView.getContext(), ProfilePage.class);
+                intent.putExtra("fromPage", "specialist");
+                intent.putExtra("userId", user.id());
+                context.startActivity(intent);
+            });
 
             Glide.with(holder.itemView.getContext())
                     .load(user.photoPath())

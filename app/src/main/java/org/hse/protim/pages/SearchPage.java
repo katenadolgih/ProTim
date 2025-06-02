@@ -427,12 +427,20 @@ public class SearchPage extends BaseActivity {
             });
 
             holder.favoriteButton.setOnClickListener(v -> {
+
                 projectClient.updateFavourites(projectId, new ProjectClient.PutLikeCallBack() {
                     @Override
                     public void onSuccess() {
                         projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
                             @Override
                             public void onSuccess(Boolean isLike) {
+                                if (isLike) {
+                                    Context ctx = holder.itemView.getContext();
+                                    if (ctx instanceof BaseActivity) {
+                                        ((BaseActivity) ctx).showFavoritePopup();
+                                    }
+                                    ((BaseActivity) ctx).showSelectionPopup(projectId);
+                                }
                                 holder.favoriteButton.setSelected(isLike);
                             }
 

@@ -67,7 +67,7 @@ public class SelectionCreatingPage extends BaseActivity {
                 descriptionField.getText().toString()
         );
 
-        collectionClient.createCollection(collectionCreateDTO, new CollectionClient.CreateCollectionCallback() {
+        collectionClient.createCollection(collectionCreateDTO, new CollectionClient.NoGetCollectionCallback() {
             @Override
             public void onSuccess() {
                 Intent intent = new Intent(SelectionCreatingPage.this, FavoritesPage.class);

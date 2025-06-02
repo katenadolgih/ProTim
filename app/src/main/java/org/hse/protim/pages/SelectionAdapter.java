@@ -16,7 +16,9 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import org.hse.protim.DTO.collection.CollectionDTO;
 import org.hse.protim.R;
+import org.hse.protim.clients.retrofit.favourites.FavouritesApi;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +62,11 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
             holder.itemView.setOnClickListener(v -> {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, SelectionDetailsPage.class);
+                intent.putExtra("collectionId", collection.id());
+                intent.putExtra("collectionName", collection.name());
+                if (v.getContext() instanceof FavoritesPage) {
+                    intent.putExtra("fromPage", "favourites");
+                }
                 context.startActivity(intent);
             });
         } else if (holder.viewType == TYPE_POPUP && holder.checkBox != null) {
@@ -75,6 +82,8 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
 
         Glide.with(holder.itemView.getContext())
                 .load(collection.photoPath())
+                .placeholder(R.drawable.ic_building)
+                .error(R.drawable.ic_building)
                 .into(holder.projectImage);
     }
 
@@ -102,8 +111,18 @@ public class SelectionAdapter extends RecyclerView.Adapter<SelectionAdapter.Sele
             if (viewType == TYPE_DEFAULT) {
                 description = itemView.findViewById(R.id.selectionDescription);
             } else {
-                checkBox = itemView.findViewById(R.id.checkbox_inspiration);
+                checkBox = itemView.findViewById(R.id.checkboxButton);
             }
         }
+    }
+
+    public List<CollectionDTO> getSelectedCollections() {
+        List<CollectionDTO> selected = new ArrayList<>();
+        for (Integer pos : selectedPositions) {
+            if (pos >= 0 && pos < selectionList.size()) {
+                selected.add(selectionList.get(pos));
+            }
+        }
+        return selected;
     }
 }

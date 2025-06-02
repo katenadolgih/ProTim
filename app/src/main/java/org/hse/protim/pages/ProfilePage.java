@@ -685,6 +685,13 @@ public class ProfilePage extends BaseActivity {
                         projectClient.checkFavourites(projectId, new ProjectClient.LikeCallback() {
                             @Override
                             public void onSuccess(Boolean isLike) {
+                                if (isLike) {
+                                    Context ctx = holder.itemView.getContext();
+                                    if (ctx instanceof BaseActivity) {
+                                        ((BaseActivity) ctx).showFavoritePopup();
+                                    }
+                                    ((BaseActivity) ctx).showSelectionPopup(projectId);
+                                }
                                 holder.favoriteButton.setSelected(isLike);
                             }
 
